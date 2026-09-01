@@ -1,0 +1,8 @@
+{
+  "name": "F&B Shift Scheduler",
+  "description": "Auto-schedule shifts optimized with heuristics, quick backups, and complete HR/risk compliance reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

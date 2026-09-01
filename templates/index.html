@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Phân Ca & Quản Trị Nhân Sự F&B | Hùng Vương Concert</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="dark-theme">
+    <!-- Main App Container -->
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <!--
+            Một khối markup, hai hình thái: rail dọc trên máy tính, tab bar đáy
+            trên điện thoại. Khác nhau hoàn toàn bằng CSS.
+            KHÔNG đổi `id` hay `data-tab` — app.js bám vào chúng.
+        -->
+        <aside class="sidebar">
+            <div class="brand-box">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>HÙNG VƯƠNG HR</h2>
+                    <span>Project F&amp;B Scheduler</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu" aria-label="Điều hướng chính">
+                <button class="nav-item active" data-tab="tab-schedule">
+                    <i class="fa-solid fa-table-cells-large"></i>
+                    <span class="nav-full">Bảng Phân Ca Tuần</span>
+                    <span class="nav-short">Bảng trực</span>
+                </button>
+                <button class="nav-item" data-tab="tab-optimizer">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span class="nav-full">Tinh Chỉnh &amp; Tối Ưu</span>
+                    <span class="nav-short">Xếp ca</span>
+                </button>
+                <button class="nav-item" data-tab="tab-inventory">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <span class="nav-full">Kho Hàng &amp; Doanh Thu</span>
+                    <span class="nav-short">Kho hàng</span>
+                </button>
+                <button class="nav-item" data-tab="tab-analytics">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span class="nav-full">Thống Kê &amp; Heatmap</span>
+                    <span class="nav-short">Thống kê</span>
+                </button>
+                <button class="nav-item" data-tab="tab-kpi">
+                    <i class="fa-solid fa-award"></i>
+                    <span class="nav-full">Chạy KPI Chuyên Cần</span>
+                    <span class="nav-short">Chạy KPI</span>
+                </button>
+                <button class="nav-item" data-tab="tab-audit">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    <span class="nav-full">Kiểm Tra &amp; Quy Trình HR</span>
+                    <span class="nav-short">Kiểm tra &amp; HR</span>
+                </button>
+                <button class="nav-item" data-tab="tab-contingency">
+                    <i class="fa-solid fa-user-clock"></i>
+                    <span class="nav-full">Xử Lý Ca Vắng &amp; Backup</span>
+                    <span class="nav-short">Ca vắng</span>
+                </button>
+                <button class="nav-item" data-tab="tab-live-shift">
+                    <i class="fa-solid fa-tower-broadcast"></i>
+                    <span class="nav-full">Ca-Live &amp; POS Bán Hàng</span>
+                    <span class="nav-short">Ca-Live</span>
+                </button>
+
+                <!-- Chỉ hiện trên điện thoại: mở bảng chứa 3 tab ít dùng + xuất Excel -->
+                <button class="nav-item more-trigger" id="btnMoreMenu" type="button"
+                        aria-expanded="false" aria-controls="moreSheet">
+                    <i class="fa-solid fa-ellipsis"></i>
+                    <span class="nav-short">Thêm</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="export-card">
+                    <div class="export-icon"><i class="fa-solid fa-file-excel"></i></div>
+                    <div class="export-info">
+                        <h4>Xuất File Excel</h4>
+                        <p>Đầy đủ 6 Sheet chuẩn HR</p>
+                    </div>
+                </div>
+                <a href="/api/schedule/export" class="btn-export" id="btnExportExcel">
+                    <i class="fa-solid fa-download"></i> <span>Tải Báo Cáo Excel</span>
+                </a>
+                <button class="btn-preview" id="btnOpenPreviewModal">
+                    <i class="fa-solid fa-eye"></i> <span>Xem Trước Preview</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Bảng "Thêm" — chỉ dùng trên điện thoại -->
+        <div class="more-sheet" id="moreSheet" role="dialog" aria-modal="true" aria-label="Thêm">
+            <div class="more-panel">
+                <p class="more-title">Mục khác</p>
+                <button class="nav-item" data-tab="tab-inventory">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <span class="nav-full">Kho Hàng &amp; Doanh Thu</span>
+                </button>
+                <button class="nav-item" data-tab="tab-live-shift">
+                    <i class="fa-solid fa-tower-broadcast"></i>
+                    <span class="nav-full">Ca-Live &amp; POS Bán Hàng</span>
+                </button>
+                <button class="nav-item" data-tab="tab-kpi">
+                    <i class="fa-solid fa-award"></i>
+                    <span class="nav-full">Chạy KPI Chuyên Cần</span>
+                </button>
+                <button class="nav-item" data-tab="tab-audit">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    <span class="nav-full">Kiểm Tra &amp; Quy Trình HR</span>
+                </button>
+                <div class="more-actions">
+                    <a href="/api/schedule/export" class="btn-export">
+                        <i class="fa-solid fa-download"></i> <span>Tải Excel</span>
+                    </a>
+                    <button class="btn-preview" id="btnMorePreview">
+                        <i class="fa-solid fa-eye"></i> <span>Xem trước</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <h1 id="pageTitle">Lịch Trực Toàn Bộ Các Ngày Trong Tuần</h1>
+                    <p class="subtitle">Dự án Gây Quỹ F&B | THPT Chuyên Hùng Vương</p>
+                </div>
+                <div class="topbar-right">
+                    <button class="btn-upload-trigger" id="btnOpenUploadModal">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Nạp Dữ Liệu / Google Sheet
+                    </button>
+                    <button class="btn-quick-run" id="btnQuickOptimize">
+                        <i class="fa-solid fa-bolt"></i> Chạy Tối Ưu Hóa (OR-Tools)
+                    </button>
+                </div>
+            </header>
+
+            <!-- TAB 1: LỊCH TRỰC TUẦN -->
+            <section id="tab-schedule" class="tab-content active">
+                <!-- Filter bar -->
+                <div class="glass-card filter-bar">
+                    <div class="filter-group">
+                        <label><i class="fa-solid fa-filter"></i> Kênh trực:</label>
+                        <div class="btn-group" id="channelFilter">
+                            <button class="filter-btn active" data-filter="all">Tất Cả</button>
+                            <button class="filter-btn" data-filter="Phong">Phòng Thanh Niên</button>
+                            <button class="filter-btn" data-filter="Ngoai">Điểm Bán Ngoài</button>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label><i class="fa-solid fa-calendar"></i> Thứ trong tuần:</label>
+                        <select id="dayFilter" class="custom-select">
+                            <option value="all">Tất Cả Các Ngày (T2 - CN)</option>
+                            <option value="Thứ 2">Thứ 2</option>
+                            <option value="Thứ 3">Thứ 3</option>
+                            <option value="Thứ 4">Thứ 4</option>
+                            <option value="Thứ 5">Thứ 5</option>
+                            <option value="Thứ 6">Thứ 6</option>
+                            <option value="Thứ 7">Thứ 7</option>
+                            <option value="Chủ Nhật">Chủ Nhật</option>
+                        </select>
+                    </div>
+
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="memberSearchInput" placeholder="Tìm tên thành viên, SĐT, Ban...">
+                    </div>
+                </div>
+
+                <!-- Schedule Grid Container -->
+                <div class="schedule-container" id="scheduleGrid">
+                    <div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải dữ liệu lịch trực...</div>
+                </div>
+            </section>
+
+            <!-- TAB 2: TINH CHỈNH & TỐI ƯU HÓA -->
+            <section id="tab-optimizer" class="tab-content">
+                <div class="glass-card max-width-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-sliders"></i> Tinh Chỉnh Tham Số Phân Công & Tối Ưu Hóa Nhân Sự</h3>
+                        <p>Cấu hình định mức nhân sự trực chính và nhân sự dự phòng cho các ca phòng Thanh Niên</p>
+                    </div>
+                    <form id="optimizerForm" class="config-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-calendar-day"></i> Ngày bắt đầu tuần (Thứ 2)</label>
+                                <input type="date" id="cfgStartDate" value="2026-08-24" class="custom-input">
+                                <small>Hệ thống tự động tính ngày dương lịch (dd/mm/yyyy) cho từng ca từ Thứ 2 đến Chủ Nhật</small>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-user-check"></i> Số lượng nhân sự trực chính mặc định / ca</label>
+                                <input type="number" id="cfgPhongChinh" value="4" min="1" max="15" class="custom-input">
+                                <small>Định mức nhân sự có mặt trực tiếp tại Phòng Thanh Niên (1 - 15 người)</small>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-user-clock"></i> Số lượng nhân sự dự phòng mặc định / ca</label>
+                                <input type="number" id="cfgPhongDP" value="1" min="0" max="8" class="custom-input">
+                                <small>Nhân sự standby sẵn sàng hỗ trợ khi đông khách hoặc thay thế vắng (0 - 8 người)</small>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-chart-line"></i> Số ca tối thiểu / người / tuần</label>
+                                <input type="number" id="cfgMinShifts" value="1" min="1" max="10" class="custom-input">
+                                <small>Đảm bảo mọi thành viên đều được tham gia đóng góp</small>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-battery-half"></i> Số ca tối đa / người / tuần</label>
+                                <input type="number" id="cfgMaxShifts" value="4" min="1" max="10" class="custom-input">
+                                <small>Tránh quá tải và cân bằng việc học tập của học sinh/sinh viên</small>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-sun"></i> Giới hạn ca tối đa / ngày</label>
+                                <input type="number" id="cfgMaxDaily" value="2" min="1" max="3" class="custom-input">
+                                <small>Tối đa 2 ca/ngày (4 giờ trực) để giữ thể lực</small>
+                            </div>
+                        </div>
+
+                        <div class="action-row">
+                            <button type="submit" class="btn-primary" id="btnRunOptimizer">
+                                <i class="fa-solid fa-play"></i> Thực Thi Thuật Toán Phân Ca Tối Ưu (Google OR-Tools CP-SAT)
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- BẢNG TINH CHỈNH CA TRỰC NGÀY (QUY CHUẨN 5 CA TRỰC TUẦN) -->
+                <div class="glass-card max-width-card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-clock-rotate-left"></i> Bảng Tinh Chỉnh Tham Số Ca Trực Ngày & Quy Chuẩn Nhân Sự</h3>
+                        <p>Điều chỉnh thời gian, định mức nhân sự chính/dự phòng và đặc điểm vận hành của 5 ca trực cố định mỗi ngày</p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="tableDailyShiftConfig">
+                            <thead>
+                                <tr>
+                                    <th style="width: 80px;">Ca trực</th>
+                                    <th style="width: 170px;">Thời gian</th>
+                                    <th>Đặc điểm chính &amp; Yêu cầu vận hành</th>
+                                    <th style="width: 220px;">Số lượng nhân sự</th>
+                                    <th style="width: 100px;">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong class="badge-blue">Ca 1</strong></td>
+                                    <td>
+                                        <div class="time-inputs-inline">
+                                            <input type="text" id="shift1Start" value="07:00" class="mini-input">
+                                            <span>–</span>
+                                            <input type="text" id="shift1End" value="09:30" class="mini-input">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="shift1Note" value="Khách đông đột biến vào giờ ra chơi; cần setup phòng trực sớm." class="custom-input full-width-input">
+                                    </td>
+                                    <td>
+                                        <div class="quota-inputs-inline">
+                                            <label>Chính:</label>
+                                            <input type="number" id="shift1Chinh" value="4" min="1" max="10" class="mini-num-input">
+                                            <label>+ DP:</label>
+                                            <input type="number" id="shift1DP" value="1" min="0" max="5" class="mini-num-input">
+                                        </div>
+                                    </td>
+                                    <td><span class="badge-success">Hoạt động</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="badge-blue">Ca 2</strong></td>
+                                    <td>
+                                        <div class="time-inputs-inline">
+                                            <input type="text" id="shift2Start" value="09:35" class="mini-input">
+                                            <span>–</span>
+                                            <input type="text" id="shift2End" value="12:00" class="mini-input">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="shift2Note" value="Học sinh tan trường &amp; nghỉ trưa, lượng khách (HS/GV) đông." class="custom-input full-width-input">
+                                    </td>
+                                    <td>
+                                        <div class="quota-inputs-inline">
+                                            <label>Chính:</label>
+                                            <input type="number" id="shift2Chinh" value="4" min="1" max="10" class="mini-num-input">
+                                            <label>+ DP:</label>
+                                            <input type="number" id="shift2DP" value="1" min="0" max="5" class="mini-num-input">
+                                        </div>
+                                    </td>
+                                    <td><span class="badge-success">Hoạt động</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="badge-blue">Ca 3</strong></td>
+                                    <td>
+                                        <div class="time-inputs-inline">
+                                            <input type="text" id="shift3Start" value="12:05" class="mini-input">
+                                            <span>–</span>
+                                            <input type="text" id="shift3End" value="14:00" class="mini-input">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="shift3Note" value="Học sinh chuẩn bị vào ca chiều, lượng khách ổn định." class="custom-input full-width-input">
+                                    </td>
+                                    <td>
+                                        <div class="quota-inputs-inline">
+                                            <label>Chính:</label>
+                                            <input type="number" id="shift3Chinh" value="3" min="1" max="10" class="mini-num-input">
+                                            <label>+ DP:</label>
+                                            <input type="number" id="shift3DP" value="1" min="0" max="5" class="mini-num-input">
+                                        </div>
+                                    </td>
+                                    <td><span class="badge-success">Hoạt động</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="badge-blue">Ca 4</strong></td>
+                                    <td>
+                                        <div class="time-inputs-inline">
+                                            <input type="text" id="shift4Start" value="14:05" class="mini-input">
+                                            <span>–</span>
+                                            <input type="text" id="shift4End" value="16:05" class="mini-input">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="shift4Note" value="Giờ ra chơi chiều &amp; tan tiết cuối, cần phục vụ nhanh." class="custom-input full-width-input">
+                                    </td>
+                                    <td>
+                                        <div class="quota-inputs-inline">
+                                            <label>Chính:</label>
+                                            <input type="number" id="shift4Chinh" value="4" min="1" max="10" class="mini-num-input">
+                                            <label>+ DP:</label>
+                                            <input type="number" id="shift4DP" value="1" min="0" max="5" class="mini-num-input">
+                                        </div>
+                                    </td>
+                                    <td><span class="badge-success">Hoạt động</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="badge-blue">Ca 5</strong></td>
+                                    <td>
+                                        <div class="time-inputs-inline">
+                                            <input type="text" id="shift5Start" value="16:10" class="mini-input">
+                                            <span>–</span>
+                                            <input type="text" id="shift5End" value="18:00" class="mini-input">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="shift5Note" value="Học sinh ra về; cần bán hàng, dọn dẹp, kiểm kê &amp; khóa cửa." class="custom-input full-width-input">
+                                    </td>
+                                    <td>
+                                        <div class="quota-inputs-inline">
+                                            <label>Chính:</label>
+                                            <input type="number" id="shift5Chinh" value="4" min="1" max="10" class="mini-num-input">
+                                            <label>+ DP:</label>
+                                            <input type="number" id="shift5DP" value="1" min="0" max="5" class="mini-num-input">
+                                        </div>
+                                    </td>
+                                    <td><span class="badge-success">Hoạt động</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- CẤU HÌNH & QUẢN LÝ CA BÁN NGOÀI (GỘP VÀO TINH CHỈNH TỐI ƯU) -->
+                <div class="outside-shifts-wrapper" style="margin-top: 1.5rem;">
+                    <div class="outside-toggle-card">
+                        <label class="custom-checkbox main-toggle">
+                            <input type="checkbox" id="chkMasterNgoai" checked>
+                            <span class="checkmark"></span>
+                            <strong>Kích hoạt phân công ca trực ngoài (Bỏ tick để chỉ xếp ca phòng)</strong>
+                        </label>
+                    </div>
+
+                    <div class="grid-2-col outside-grid" id="outsideShiftsGrid">
+                        <!-- Left Panel: Thêm Ca Ngoài -->
+                        <div class="glass-card">
+                            <div class="card-header">
+                                <h3>Thêm Ca Ngoài</h3>
+                            </div>
+                            <form id="formAddCaNgoai" class="add-outside-form">
+                                <div class="form-group">
+                                    <label>Tên điểm bán:</label>
+                                    <input type="text" id="inputNgoaiName" placeholder="Quán Café A" required class="custom-input">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Thứ trực:</label>
+                                    <select id="selectNgoaiDay" class="custom-select">
+                                        <option value="Thứ 2">Thứ 2</option>
+                                        <option value="Thứ 3">Thứ 3</option>
+                                        <option value="Thứ 4">Thứ 4</option>
+                                        <option value="Thứ 5">Thứ 5</option>
+                                        <option value="Thứ 6">Thứ 6</option>
+                                        <option value="Thứ 7" selected>Thứ 7</option>
+                                        <option value="Chủ Nhật">Chủ Nhật</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Khung giờ trực (Bắt đầu - Kết thúc):</label>
+                                    <div class="form-row time-row">
+                                        <input type="text" id="inputNgoaiStart" value="17:00" placeholder="17:00" class="custom-input">
+                                        <span class="time-dash">-</span>
+                                        <input type="text" id="inputNgoaiEnd" value="19:30" placeholder="19:30" class="custom-input">
+                                    </div>
+                                    <small class="field-note">Hệ thống tự động đối chiếu lịch rảnh theo khung giờ bắt đầu và kết thúc (vd: 14h-16h sẽ cần rảnh cả 2 ca 13h-15h &amp; 15h-17h; ca tối sẽ lấy dữ liệu rảnh trễ nhất).</small>
+                                </div>
+
+                                <div class="form-row quota-row">
+                                    <div class="form-group">
+                                        <label>Chính:</label>
+                                        <select id="selectNgoaiChinh" class="custom-select">
+                                            <option value="1">1 người</option>
+                                            <option value="2" selected>2 người</option>
+                                            <option value="3">3 người</option>
+                                            <option value="4">4 người</option>
+                                            <option value="5">5 người</option>
+                                            <option value="6">6 người</option>
+                                            <option value="7">7 người</option>
+                                            <option value="8">8 người</option>
+                                            <option value="9">9 người</option>
+                                            <option value="10">10 người</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Dự phòng:</label>
+                                        <select id="selectNgoaiDP" class="custom-select">
+                                            <option value="0">0 người</option>
+                                            <option value="1" selected>1 người</option>
+                                            <option value="2">2 người</option>
+                                            <option value="3">3 người</option>
+                                            <option value="4">4 người</option>
+                                            <option value="5">5 người</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn-add-green" id="btnAddCaNgoaiBtn">
+                                    <i class="fa-solid fa-plus"></i> Thêm vào danh sách
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Right Panel: Danh sách Ca ngoài -->
+                        <div class="glass-card">
+                            <div class="card-header">
+                                <h3>Danh sách Ca ngoài</h3>
+                            </div>
+                            <div class="table-responsive outside-table-box">
+                                <table class="data-table outside-table">
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Tên Điểm Bán</th>
+                                            <th>Thứ</th>
+                                            <th>Bắt Đầu</th>
+                                            <th>Kết Thúc</th>
+                                            <th>Chính</th>
+                                            <th>DP</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="caNgoaiTableBody">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row-end" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px;">
+                                <button class="btn-danger-red" id="btnClearAllCaNgoai" title="Xóa toàn bộ ca ngoài khỏi danh sách">
+                                    <i class="fa-solid fa-trash-can"></i> Xóa tất cả ca ngoài
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB: KHO HÀNG & DOANH THU F&B -->
+            <section id="tab-inventory" class="tab-content">
+                <!-- 4 Thẻ KPI Top Stats -->
+                <div class="kpi-grid inventory-kpi-grid">
+                    <div class="kpi-card kpi-gold">
+                        <div class="kpi-icon gold"><i class="fa-solid fa-coins"></i></div>
+                        <div class="kpi-data">
+                            <h3 id="invKpiRevenue">0 ₫</h3>
+                            <p>Tổng Doanh Thu (Bán ca + Ngoài)</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon blue"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        <div class="kpi-data">
+                            <h3 id="invKpiTotalStock">0 SP</h3>
+                            <p>Tổng SP Tồn Kho Hiện Tại</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon green"><i class="fa-solid fa-cart-shopping"></i></div>
+                        <div class="kpi-data">
+                            <h3 id="invKpiTotalSold">0 SP</h3>
+                            <p>Tổng Số Lượng Đã Bán</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon purple"><i class="fa-solid fa-vault"></i></div>
+                        <div class="kpi-data">
+                            <h3 id="invKpiStockValue">0 ₫</h3>
+                            <p>Giá Trị Hàng Tồn Kho</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Catalog Card -->
+                <div class="glass-card">
+                    <div class="card-header flex-between">
+                        <div>
+                            <h3><i class="fa-solid fa-warehouse"></i> Bảng Danh Mục Sản Phẩm & Tồn Kho F&B</h3>
+                            <p>Quản lý nguồn hàng, giá bán, tồn kho đầu, số lượng đã bán và tồn kho thực tế</p>
+                        </div>
+                        <div class="header-actions-group">
+                            <button class="btn-export" id="btnUploadInventoryExcel" type="button" style="background: #2D6A4F; border-color: #2D6A4F; padding: 6px 14px; font-size: 13px;">
+                                <i class="fa-solid fa-file-excel"></i> Nhập SP Từ Excel
+                            </button>
+                            <input type="file" id="inputInventoryExcelFile" accept=".xlsx,.xls,.csv" style="display:none;" />
+                            <button class="btn-primary" id="btnOpenRecordSaleModal">
+                                <i class="fa-solid fa-cash-register"></i> Ghi Nhận Bán Hàng
+                            </button>
+                            <button class="btn-add-green" id="btnOpenAddProductModal">
+                                <i class="fa-solid fa-plus"></i> + Thêm SP
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table" id="inventoryTable">
+                            <thead>
+                                <tr>
+                                    <th>MÃ</th>
+                                    <th>TÊN SẢN PHẨM</th>
+                                    <th>ĐVT</th>
+                                    <th>GIÁ BÁN</th>
+                                    <th>TỒN KHO ĐẦU</th>
+                                    <th>ĐÃ BÁN</th>
+                                    <th>TỒN KHO</th>
+                                    <th>DOANH THU</th>
+                                    <th>HÀNH ĐỘNG</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sales Logs Table -->
+                <div class="glass-card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-receipt"></i> Nhật Ký Giao Dịch Bán Hàng Gần Đây</h3>
+                        <p>Theo dõi luồng doanh thu theo từng ca trực và điểm bán ngoài</p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="salesLogsTable">
+                            <thead>
+                                <tr>
+                                    <th>MÃ GD</th>
+                                    <th>THỜI GIAN</th>
+                                    <th>SẢN PHẨM</th>
+                                    <th>SỐ LƯỢNG</th>
+                                    <th>ĐƠN GIÁ</th>
+                                    <th>THÀNH TIỀN</th>
+                                    <th>KÊNH / ĐIỂM BÁN</th>
+                                    <th>NGƯỜI BÁN</th>
+                                    <th>GHI CHÚ</th>
+                                    <th>HÀNH ĐỘNG</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesLogsTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: THỐNG KÊ & HEATMAP -->
+            <section id="tab-analytics" class="tab-content">
+                <!-- KPI Cards -->
+                <div class="kpi-grid" id="kpiGrid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon blue"><i class="fa-solid fa-users"></i></div>
+                        <div class="kpi-data">
+                            <h3 id="kpiTotalMembers">50</h3>
+                            <p>Tổng Nhân Sự Khảo Sát</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon green"><i class="fa-solid fa-clock"></i></div>
+                        <div class="kpi-data">
+                            <h3 id="kpiTotalShifts">70</h3>
+                            <p>Tổng Ca Hoạt Động</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon purple"><i class="fa-solid fa-scale-balanced"></i></div>
+                        <div class="kpi-data">
+                            <h3 id="kpiAvgShifts">3.9</h3>
+                            <p>Ca Trung Bình / Người</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon amber"><i class="fa-solid fa-shield-check"></i></div>
+                        <div class="kpi-data">
+                            <h3 id="kpiFairness">97.1%</h3>
+                            <p>Chỉ Số Công Bằng HR</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Heatmap Thời Gian Rảnh -->
+                <div class="glass-card heatmap-card">
+                    <div class="card-header heatmap-header">
+                        <div>
+                            <h3><i class="fa-solid fa-fire"></i> Heatmap Mật Độ Thời Gian Rảnh Của Nhân Sự (7 Ngày × 5 Khung Giờ)</h3>
+                            <p>Biểu đồ trực quan hóa số lượng thành viên rảnh trong từng khung giờ để bố trí ca tối ưu</p>
+                        </div>
+                        <div class="heatmap-legend">
+                            <span>Ít người rảnh</span>
+                            <div class="legend-scale">
+                                <span class="heat-box lvl-0">0</span>
+                                <span class="heat-box lvl-1">&lt;10</span>
+                                <span class="heat-box lvl-2">&lt;20</span>
+                                <span class="heat-box lvl-3">&lt;30</span>
+                                <span class="heat-box lvl-4">&ge;30</span>
+                            </div>
+                            <span>Rất đông người rảnh</span>
+                        </div>
+                    </div>
+                    <div class="heatmap-table-container" id="heatmapContainer">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Member Table -->
+                <div class="glass-card table-card">
+                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <h3 style="margin: 0;"><i class="fa-solid fa-address-book"></i> Bảng Thống Kê Chi Tiết Khối Lượng Trực Của Thành Viên</h3>
+                        <div class="search-box" style="margin: 0; max-width: 320px; width: 100%;">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="memberStatsSearchInput" placeholder="Tìm tên, SĐT, Ban...">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="memberTable">
+                            <thead>
+                                <tr>
+                                    <th>Mã TV</th>
+                                    <th>Họ Và Tên</th>
+                                    <th>Ban</th>
+                                    <th>Đối Tượng</th>
+                                    <th>SĐT</th>
+                                    <th>Đội Ứng Biến</th>
+                                    <th>Tổng Ca</th>
+                                    <th>Tổng Giờ</th>
+                                    <th>Ca Trong</th>
+                                    <th>Ca Ngoài</th>
+                                    <th>Thỏa Cam Kết</th>
+                                    <th>Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="memberTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4.5: CHẠY KPI CHUYÊN CẦN -->
+            <section id="tab-kpi" class="tab-content">
+                <!-- KPI Overview Grid -->
+                <div class="kpi-grid" style="margin-bottom: 1.5rem;">
+                    <div class="kpi-card">
+                        <div class="kpi-icon blue"><i class="fa-solid fa-clipboard-user"></i></div>
+                        <div class="kpi-data">
+                            <h3 id="kpiStatTotal">0</h3>
+                            <p>Tổng Ca Điểm Danh</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon green"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="kpi-data">
+                            <h3 id="kpiStatOnTimeRate">100%</h3>
+                            <p>Tỉ Lệ Đúng Giờ</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon amber"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                        <div class="kpi-data">
+                            <h3 id="kpiStatLate">0</h3>
+                            <p>Số Ca Đi Trễ</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon red" style="color: var(--cinnabar); background: rgba(239, 68, 68, 0.1);"><i class="fa-solid fa-circle-exclamation"></i></div>
+                        <div class="kpi-data">
+                            <h3 id="kpiStatAbsent" style="color: var(--cinnabar);">0</h3>
+                            <p>Vắng Không Phép</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI Main Content Layout -->
+                <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 1.5rem;" class="kpi-dashboard-grid">
+                    
+                    <!-- LEFT / UPPER: Attendance Logging -->
+                    <div class="glass-card">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                            <div>
+                                <h3 style="margin: 0;"><i class="fa-solid fa-clipboard-check"></i> Sổ Điểm Danh &amp; Ghi Nhận Chuyên Cần Tuần</h3>
+                                <p style="font-size: 0.85rem; color: var(--ink-dim); margin: 0.25rem 0 0 0;">Cập nhật trạng thái trực của từng thành viên trong ca để tự động chạy KPI.</p>
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <div class="search-box" style="margin: 0; max-width: 240px;">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" id="kpiShiftSearchInput" placeholder="Tìm ca, ngày, tên...">
+                                </div>
+                                <button class="btn-secondary" id="btnResetKpiAttendance" style="padding: 6px 12px; font-size: 13px;">
+                                    <i class="fa-solid fa-rotate-left"></i> Đặt Lại Toàn Bộ
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Attendance Table -->
+                        <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Thứ</th>
+                                        <th>Khung Giờ</th>
+                                        <th>Kênh Trực</th>
+                                        <th>Thành Viên</th>
+                                        <th>Vai Trò</th>
+                                        <th style="width: 220px;">Trạng Thái Điểm Danh</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="kpiAttendanceTableBody">
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; color: var(--ink-dim); padding: 2rem;">
+                                            <i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải danh sách ca trực...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT / LOWER: Leaderboard -->
+                    <div class="glass-card">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                            <div>
+                                <h3 style="margin: 0;"><i class="fa-solid fa-ranking-star"></i> Bảng Xếp Hạng &amp; Đánh Giá Điểm KPI Chuyên Cần</h3>
+                                <p style="font-size: 0.85rem; color: var(--ink-dim); margin: 0.25rem 0 0 0;">Tự động phân loại hiệu suất làm việc dựa trên biểu điểm chuyên cần chuẩn HR.</p>
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <div class="search-box" style="margin: 0; max-width: 260px;">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" id="kpiMemberSearchInput" placeholder="Tìm tên thành viên, Ban...">
+                                </div>
+                                <button class="btn-primary" id="btnExportKpiReport" style="padding: 6px 12px; font-size: 13px; background: var(--blue-accent);">
+                                    <i class="fa-solid fa-file-excel"></i> Xuất Báo Cáo KPI
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Rule reference sheet -->
+                        <div style="background: var(--bg-card-alt); border-radius: 8px; padding: 12px; margin: 0 1.5rem 1.25rem 1.5rem; display: flex; flex-wrap: wrap; gap: 15px; font-size: 12px; border: 1px solid var(--border-color); align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 4px;"><b style="color: var(--goldleaf);">Biểu điểm KPI:</b></div>
+                            <div style="display: flex; align-items: center; gap: 4px;"><span class="dot-indicator" style="background: #10b981;"></span> Đúng giờ: <b style="color: #10b981;">+10</b></div>
+                            <div style="display: flex; align-items: center; gap: 4px;"><span class="dot-indicator" style="background: #f59e0b;"></span> Đi trễ: <b style="color: #f59e0b;">+5</b></div>
+                            <div style="display: flex; align-items: center; gap: 4px;"><span class="dot-indicator" style="background: #3b82f6;"></span> Có phép: <b style="color: #3b82f6;">+3</b></div>
+                            <div style="display: flex; align-items: center; gap: 4px;"><span class="dot-indicator" style="background: #ef4444;"></span> Không phép: <b style="color: #ef4444;">-15</b></div>
+                            <div style="display: flex; align-items: center; gap: 4px;"><span class="dot-indicator" style="background: #8b5cf6;"></span> Ứng biến standby: <b style="color: #8b5cf6;">+15</b></div>
+                        </div>
+
+                        <!-- Leaderboard Table -->
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Xếp Hạng</th>
+                                        <th>Mã TV</th>
+                                        <th>Hành Viên</th>
+                                        <th>Ban Chuyên Môn</th>
+                                        <th>Số Ca Trực</th>
+                                        <th>Chi Tiết Ca</th>
+                                        <th>Điểm KPI</th>
+                                        <th>Xếp Loại Hiệu Suất</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="kpiLeaderboardTableBody">
+                                    <tr>
+                                        <td colspan="8" style="text-align: center; color: var(--ink-dim); padding: 2rem;">
+                                            <i class="fa-solid fa-circle-notch fa-spin"></i> Đang tính toán dữ liệu KPI...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- TAB 5: KIỂM TRA TÍNH HỢP LỆ & QUY TRÌNH HR RỦI RO (GỘP TẠI CÙNG TAB) -->
+            <section id="tab-audit" class="tab-content">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-clipboard-check"></i> Báo Cáo Thẩm Định & Tuân Thủ Quy Chuẩn Nhân Sự</h3>
+                        <p>Kiểm tra tự động các ràng buộc Hard Constraints & Soft Constraints</p>
+                    </div>
+
+                    <div class="audit-summary-banner pass" id="auditBanner">
+                        <div class="banner-icon"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="banner-text">
+                            <h4>HỆ THỐNG ĐẠT CHUẨN 100% (TẤT CẢ RÀNG BUỘC ĐÃ ĐƯỢC THỎA MÃN)</h4>
+                            <p>Không phát hiện bất kỳ xung đột trùng ca, không vi phạm lịch rảnh và không có phòng trống.</p>
+                        </div>
+                    </div>
+
+                    <div class="audit-checklist-grid" id="auditChecklistGrid">
+                        <!-- Check cards populated by JS -->
+                    </div>
+                </div>
+
+                <!-- QUY TRÌNH HR & RỦI RO VẬN HÀNH -->
+                <div class="glass-card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-book-bookmark"></i> Quy Trình Quản Trị Nhân Sự & Dự Trù Rủi Ro (Nhiệm Vụ 2)</h3>
+                        <p>Quy trình 5 bước vận hành nhân sự và kịch bản ứng biến rủi ro chi tiết</p>
+                    </div>
+                    <div class="protocols-nav" id="protocolsNav">
+                        <button class="p-nav-btn active" data-sec="sec-1">1. Thu Thập Lịch Rảnh</button>
+                        <button class="p-nav-btn" data-sec="sec-2">2. Lịch Trực Tuần</button>
+                        <button class="p-nav-btn" data-sec="sec-3">3. Quản Lý & Giám Sát</button>
+                        <button class="p-nav-btn" data-sec="sec-4">4. Phân Bổ Điểm Ngoài</button>
+                        <button class="p-nav-btn" data-sec="sec-5">5. Dự Trù Rủi Ro Vận Hành</button>
+                    </div>
+
+                    <div class="protocol-body" id="protocolBody">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6: QUẢN LÝ CA VẮNG & ĐỘI ỨNG BIẾN -->
+            <section id="tab-contingency" class="tab-content">
+                <div class="grid-2-col">
+                    <!-- Live Attendance & Incident Workflow -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-user-check"></i> Quy Trình Quản Lý Ca Vắng, Đi Trễ & Ghi Nhận Sự Cố</h3>
+                            <p>Ghi nhận trạng thái điểm danh và kích hoạt tức thì nhân sự dự phòng thay thế</p>
+                        </div>
+                        <div class="status-handling-box">
+                            <div class="status-pill status-present">
+                                <i class="fa-solid fa-check"></i> Có Mặt Đúng Giờ
+                            </div>
+                            <div class="status-pill status-late">
+                                <i class="fa-solid fa-clock-rotate-left"></i> Đi Trễ
+                            </div>
+                            <div class="status-pill status-leave">
+                                <i class="fa-solid fa-calendar-xmark"></i> Xin Nghỉ Trước
+                            </div>
+                            <div class="status-pill status-emergency">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Vắng Đột Xuất
+                            </div>
+                        </div>
+
+                        <!-- Incident Logger & Replacement Tool -->
+                        <div class="incident-form-box">
+                            <h4><i class="fa-solid fa-bolt"></i> Điều Phối & Bố Trí Nhân Sự Thay Thế</h4>
+                            
+                            <div class="form-group">
+                                <label>1. Chọn ca trực phát sinh sự cố:</label>
+                                <select id="incidentShiftSelect" class="custom-select"></select>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>2. Thành viên vắng / đi trễ / đổi ca:</label>
+                                    <select id="incidentAbsentSelect" class="custom-select"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label>3. Trạng thái điểm danh:</label>
+                                    <select id="incidentStatusSelect" class="custom-select">
+                                        <option value="Đi trễ">⏰ Đi trễ</option>
+                                        <option value="Vắng đột xuất">🚨 Vắng đột xuất (Khẩn cấp)</option>
+                                        <option value="Xin nghỉ trước">📝 Xin nghỉ trước (&gt;24h)</option>
+                                        <option value="Có mặt">✅ Đổi ca / Thay thế thành công</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>4. Gợi ý nhân sự dự phòng thay thế (Đã lọc danh sách khả dụng):</label>
+                                <select id="incidentReplacementSelect" class="custom-select"></select>
+                                <small id="replacementHint" class="field-note">Đang tải danh sách nhân sự rảnh...</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Ghi chú sự cố:</label>
+                                <input type="text" id="incidentNote" placeholder="Lý do bận, thỏa thuận hỗ trợ..." class="custom-input">
+                            </div>
+
+                            <button class="btn-primary" id="btnSubmitIncident">
+                                <i class="fa-solid fa-user-plus"></i> Xác Nhận Thay Ca & Cập Nhật Hệ Thống
+                            </button>
+                            <div id="incidentResultMsg" class="swap-msg"></div>
+                        </div>
+                    </div>
+
+                    <!-- Incident Logs & Late Arrival Table -->
+                    <div class="glass-card">
+                        <div class="card-header flex-between">
+                            <div>
+                                <h3><i class="fa-solid fa-clock-rotate-left"></i> Bảng Báo Cáo Người Đi Trễ & Vắng Mặt Tách Biệt</h3>
+                                <p>Theo dõi thống kê vi phạm điểm danh, đi trễ và tiến độ thay thế nhân sự</p>
+                            </div>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <button class="btn-primary" id="btnExportIncidentExcel" style="font-size: 12px; padding: 7px 14px; background: #059669; border-color: #047857;" title="Xuất file Excel báo cáo người vắng, đi trễ & thay thế">
+                                    <i class="fa-solid fa-file-excel"></i> Xuất Excel Ca Vắng &amp; Dự Phòng
+                                </button>
+                                <button class="btn-danger-red" id="btnResetIncidents" style="font-size: 12px; padding: 7px 14px;" title="Xóa toàn bộ lịch sử điểm danh và sự cố">
+                                    <i class="fa-solid fa-trash-can"></i> Xóa Lịch Sử Ghi Nhận
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="incident-kpi-summary">
+                            <div class="inc-kpi-card">
+                                <span class="inc-title">Tổng Lượt Đi Trễ</span>
+                                <strong id="kpiLateCount" class="inc-val warn">0</strong>
+                            </div>
+                            <div class="inc-kpi-card">
+                                <span class="inc-title">Tổng Lượt Vắng Mặt</span>
+                                <strong id="kpiAbsentCount" class="inc-val danger">0</strong>
+                            </div>
+                            <div class="inc-kpi-card">
+                                <span class="inc-title">Đã Bố Trí Thay Thế</span>
+                                <strong id="kpiReplacedCount" class="inc-val ok">0</strong>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive" style="margin-top: 1rem;">
+                            <table class="data-table" id="lateAbsenceTable">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>THỜI GIAN GHI NHẬN</th>
+                                        <th>CA TRỰC & KHUNG GIỜ</th>
+                                        <th>ĐỊA ĐIỂM</th>
+                                        <th>NGƯỜI VẮNG / TRỄ</th>
+                                        <th>TRẠNG THÁI</th>
+                                        <th>NHÂN SỰ THAY THẾ</th>
+                                        <th>GHI CHÚ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lateAbsenceTableBody">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 7: CA-LIVE & POS BÁN HÀNG -->
+            <section id="tab-live-shift" class="tab-content">
+                <!-- Banner selection & live clock (Compact Layout with Collapse Toggle) -->
+                <div class="glass-card" style="margin-bottom: 1.2rem; padding: 12px 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <h3 style="margin: 0; font-size: 16px; color: var(--goldleaf); display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-tower-broadcast" style="color: var(--cinnabar);"></i> 
+                                Ca-Live &amp; POS Bán Hàng
+                            </h3>
+                            <span style="font-size: 12px; color: var(--ink-dim);">(Điểm danh realtime, ghi nhận vắng &amp; bán hàng POS)</span>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
+                                <i class="fa-solid fa-clock" style="color: var(--goldleaf); font-size: 12px;"></i>
+                                <span id="liveRealTimeClock" style="font-family: monospace; font-size: 13px; font-weight: 600; color: #FFF;">--:--:--</span>
+                            </div>
+                            <button type="button" class="btn-action-sm" id="btnToggleLiveHeader" style="font-size: 11px; padding: 5px 10px; background: rgba(255,255,255,0.06); color: var(--ink-light); border: 1px solid rgba(255,255,255,0.1); cursor: pointer;" title="Thu gọn / Mở rộng bảng chọn ca">
+                                <i class="fa-solid fa-chevron-up" id="iconToggleLiveHeader"></i> <span id="textToggleLiveHeader">Thu gọn</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="liveHeaderBody" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <label style="font-weight: 600; font-size: 13px; color: var(--goldleaf); white-space: nowrap; margin: 0;">
+                            <i class="fa-solid fa-list-check"></i> Chọn Ca Trực:
+                        </label>
+                        <select id="liveShiftSelect" class="custom-select" style="flex: 1; min-width: 260px; font-size: 14px; font-weight: 600; padding: 7px 12px; background: var(--bg-card); color: #FFF; border-color: var(--patina);">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- POS Thu Ngân Ca Live -->
+                <div class="glass-card" style="margin-bottom: 1.5rem;">
+                    <div class="card-header flex-between" style="flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <h3><i class="fa-solid fa-cash-register"></i> Máy Thu Ngân POS Bán Hàng Ca Live</h3>
+                            <p>Bán hàng F&amp;B, tự động trừ tồn kho &amp; ghi nhận doanh thu vào ca này</p>
+                        </div>
+                        <span class="badge-gold" style="font-weight: 700; padding: 4px 10px; border-radius: 6px; font-size: 12px;" id="liveShiftRevSummary">0 ₫ ca này</span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                        <!-- Left: Products Grid & Quick Add -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+                                <label style="font-weight: 600; font-size: 13px; color: var(--ink-light); margin: 0;">Danh mục sản phẩm có sẵn trong kho:</label>
+                            </div>
+                            
+                            <!-- Quick Select & Add to Cart -->
+                            <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: center;">
+                                <select id="livePOSQuickSelect" class="custom-select" style="flex: 1; min-width: 200px; font-size: 13px; padding: 7px 10px;">
+                                    <option value="">-- Chọn nhanh sản phẩm từ kho --</option>
+                                </select>
+                                <button type="button" id="btnPOSQuickAdd" class="btn-primary" style="padding: 7px 14px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                    <i class="fa-solid fa-plus"></i> Thêm vào giỏ
+                                </button>
+                            </div>
+
+                            <div id="livePOSProductGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; max-height: 280px; overflow-y: auto; padding-right: 4px;">
+                                <!-- Product Cards populated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Right: Cart Table -->
+                        <div style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-weight: 600; font-size: 13px; color: var(--goldleaf);"><i class="fa-solid fa-cart-shopping"></i> Giỏ Hàng Bán Lẻ:</span>
+                                <button type="button" class="btn-action-sm btn-action-delete" id="btnClearLiveCart" style="font-size: 11px;">Xóa giỏ</button>
+                            </div>
+
+                            <div style="flex-grow: 1; overflow-y: auto; max-height: 180px; margin-bottom: 10px;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                                    <thead>
+                                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; color: var(--ink-dim);">
+                                            <th style="padding: 4px;">Sản Phẩm</th>
+                                            <th style="padding: 4px; text-align: center;">SL</th>
+                                            <th style="padding: 4px; text-align: right;">Đơn Giá</th>
+                                            <th style="padding: 4px; text-align: right;">Thành Tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="liveCartTbody">
+                                        <tr><td colspan="4" style="text-align: center; color: var(--ink-dim); padding: 12px;">Giỏ hàng trống. Chọn sản phẩm ở trên để thêm.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.15);">
+                                <span style="font-size: 14px; font-weight: 600;">TỔNG THANH TOÁN: <span id="liveCartTotalItems" style="font-size: 12px; color: var(--ink-dim); margin-left: 8px; font-weight: 500;">(0 món)</span></span>
+                                <strong id="liveCartTotal" style="font-size: 18px; color: var(--goldleaf);">0 ₫</strong>
+                            </div>
+
+                            <div style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <div>
+                                    <label style="font-size: 11px; color: var(--ink-dim);">Người bán (Thu ngân):</label>
+                                    <select id="livePOSSelectSeller" class="custom-select" style="font-size: 12px; padding: 4px 8px;"></select>
+                                </div>
+                                <div>
+                                    <label style="font-size: 11px; color: var(--ink-dim);">Ghi chú đơn hàng:</label>
+                                    <input type="text" id="livePOSInputNote" placeholder="Khách đưa tiền mặt..." class="custom-input" style="font-size: 12px; padding: 4px 8px;">
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn-add-green center-btn" id="btnCheckoutLivePOS" style="margin-top: 12px; width: 100%;">
+                                <i class="fa-solid fa-receipt"></i> Thanh Toán &amp; Ghi Nhận Doanh Thu Ca Live
+                            </button>
+                            <div id="livePOSMsg" class="swap-msg" style="margin-top: 6px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem;">
+                    <!-- Left Column: Điểm Danh & Ca Vắng Live -->
+                    <div class="glass-card">
+                        <div class="card-header flex-between">
+                            <div>
+                                <h3><i class="fa-solid fa-user-check"></i> Điểm Danh &amp; Ghi Nhận Vắng</h3>
+                                <p id="liveShiftInfoSub">Đang chọn ca: -</p>
+                            </div>
+                            <span id="liveShiftBadge" class="status-badge badge-success">Đang trực</span>
+                        </div>
+
+                        <div id="liveShiftMemberList" class="agenda-list" style="margin-top: 1rem; max-height: 350px; overflow-y: auto; padding-right: 4px;">
+                            <!-- Populated dynamically -->
+                        </div>
+
+                        <div style="margin-top: 1.5rem; text-align: center;">
+                            <button class="btn-primary" id="btnLiveOpenIncidentModal" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i class="fa-solid fa-user-shield"></i> Gọi Đổi Dự Phòng / Điều Phối Khẩn Cấp
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Shift Sales Transactions -->
+                    <div class="glass-card">
+                        <div class="card-header flex-between">
+                            <div>
+                                <h3><i class="fa-solid fa-receipt"></i> Nhật Ký GD Ca Này</h3>
+                                <p>Ghi nhận riêng cho ca trực đang chọn</p>
+                            </div>
+                        </div>
+                        <div class="table-responsive" style="margin-top: 1rem; max-height: 400px; overflow-y: auto;">
+                            <table class="data-table" id="liveShiftSalesTable">
+                                <thead>
+                                    <tr>
+                                        <th>MÃ GD</th>
+                                        <th>THỜI GIAN</th>
+                                        <th>SẢN PHẨM</th>
+                                        <th>SL</th>
+                                        <th>ĐƠN GIÁ</th>
+                                        <th>THÀNH TIỀN</th>
+                                        <th>THU NGÂN</th>
+                                        <th>GHI CHÚ</th>
+                                        <th>HÀNH ĐỘNG</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="liveShiftSalesTableBody">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL 1: Chỉnh Sửa Chi Tiết Ca Trực & Trưởng Ca -->
+    <div class="modal-backdrop" id="shiftEditModal">
+        <div class="modal-box glass-card">
+            <div class="modal-header">
+                <h3 id="modalShiftTitle"><i class="fa-solid fa-pen-to-square"></i> Chi Tiết & Chỉnh Sửa Ca Trực</h3>
+                <button class="modal-close" id="btnCloseShiftModal">&times;</button>
+            </div>
+            <div class="modal-body" id="modalShiftBody">
+                <!-- Content injected dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="btnCancelShiftEdit">Đóng</button>
+                <button class="btn-primary" id="btnSaveShiftEdit">Lưu Thay Đổi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Nạp Dữ Liệu Đầu Vào (File Upload / Google Sheet URL) -->
+    <div class="modal-backdrop" id="uploadDataModal">
+        <div class="modal-box glass-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-cloud-arrow-up"></i> Nạp Dữ Liệu Lịch Rảnh Thành Viên</h3>
+                <button class="modal-close" id="btnCloseUploadModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-options">
+                    <!-- Option 1: Google Sheets URL -->
+                    <div class="upload-opt-card">
+                        <h4><i class="fa-brands fa-google-drive"></i> Cách 1: Nhập Link Google Sheet</h4>
+                        <p>Dán link Google Sheet tổng hợp câu trả lời khảo sát (chế độ chia sẻ bất kỳ ai có link đều xem được):</p>
+                        <div class="form-group">
+                            <input type="text" id="inputGoogleSheetUrl" placeholder="https://docs.google.com/spreadsheets/d/..." class="custom-input">
+                        </div>
+                        <button class="btn-primary" id="btnSyncGoogleSheet">
+                            <i class="fa-solid fa-arrows-rotate"></i> Đồng Bộ Dữ Liệu Từ Google Sheet
+                        </button>
+                    </div>
+
+                    <!-- Option 2: Upload Excel/CSV File -->
+                    <div class="upload-opt-card">
+                        <h4><i class="fa-solid fa-file-arrow-up"></i> Cách 2: Tải Lên Tệp Excel / CSV</h4>
+                        <p>Chọn file Excel (.xlsx) hoặc CSV từ máy tính của bạn:</p>
+                        <input type="file" id="inputFileUpload" accept=".xlsx, .xls, .csv" class="custom-file-input">
+                        <button class="btn-primary" id="btnUploadFile">
+                            <i class="fa-solid fa-upload"></i> Nạp File Dữ Liệu
+                        </button>
+                    </div>
+                </div>
+                <div id="uploadStatusMsg" class="swap-msg"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: Xem Trước Báo Cáo (Preview Mode) & Đồng Bộ Google Sheets -->
+    <div class="modal-backdrop" id="previewModal">
+        <div class="modal-box glass-card modal-xl">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-table-cells"></i> Xem Trước Toàn Bộ Báo Cáo Lịch Trực (Preview 7 Sheets)</h3>
+                <div class="modal-header-actions">
+                    <button class="btn-copy-gsheets" id="btnCopyForGSheets">
+                        <i class="fa-solid fa-copy"></i> Sao Chép Bảng Cho Google Sheets
+                    </button>
+                    <button class="modal-close" id="btnClosePreviewModal">&times;</button>
+                </div>
+            </div>
+            <div class="preview-tabs-nav" id="previewTabsNav">
+                <button class="p-tab-btn active" data-sheet="tong_ca_truc">Tổng ca trực</button>
+                <button class="p-tab-btn" data-sheet="ca_trong">ca trong</button>
+                <button class="p-tab-btn" data-sheet="ca_ngoai">ca ngoài</button>
+                <button class="p-tab-btn" data-sheet="thong_ke">thống kê</button>
+                <button class="p-tab-btn" data-sheet="kiem_tra_ca">kiểm tra ca</button>
+                <button class="p-tab-btn" data-sheet="ca_vang">ca vắng</button>
+                <button class="p-tab-btn" data-sheet="ca_vang_backup"><i class="fa-solid fa-user-shield"></i> ca vắng &amp; Backup</button>
+            </div>
+            <div class="modal-body preview-modal-body">
+                <div class="table-responsive preview-table-wrap" id="previewTableWrap">
+                    <!-- Table rendered dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: Thêm / Sửa Sản Phẩm F&B -->
+    <div class="modal-backdrop" id="productModal">
+        <div class="modal-box glass-card">
+            <div class="modal-header">
+                <h3 id="productModalTitle"><i class="fa-solid fa-box-open"></i> Thêm Sản Phẩm Mới Vào Kho</h3>
+                <button class="modal-close" id="btnCloseProductModal">&times;</button>
+            </div>
+            <form id="productForm">
+                <div class="modal-body">
+                    <input type="hidden" id="inputProdOriginalId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Mã Sản Phẩm:</label>
+                            <input type="text" id="inputProdId" placeholder="Tự động (vd: SP08)" class="custom-input">
+                            <small class="field-note">Để trống hệ thống sẽ tự sinh mã</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Đơn Vị Tính (ĐVT):</label>
+                            <select id="inputProdUnit" class="custom-select">
+                                <option value="Ly">Ly</option>
+                                <option value="Chai">Chai</option>
+                                <option value="Gói">Gói</option>
+                                <option value="Cái">Cái</option>
+                                <option value="Hộp">Hộp</option>
+                                <option value="Phần">Phần</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên Sản Phẩm <span style="color: var(--cinnabar);">*</span>:</label>
+                        <input type="text" id="inputProdName" placeholder="vd: Cà phê Muối Đặc Biệt" required class="custom-input">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Giá Bán (VNĐ) <span style="color: var(--cinnabar);">*</span>:</label>
+                            <input type="number" id="inputProdPrice" min="0" step="1000" placeholder="20000" required class="custom-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Tồn Kho Đầu Kế Hoạch:</label>
+                            <input type="number" id="inputProdInitial" min="0" placeholder="100" value="100" class="custom-input">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Số Lượng Đã Bán Hiện Tại:</label>
+                        <input type="number" id="inputProdSold" min="0" placeholder="0" value="0" class="custom-input">
+                        <small class="field-note">Số lượng này sẽ tự động tăng khi ghi nhận bán trong ca</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ghi Chú Nguồn Hàng / Bảo Quản:</label>
+                        <input type="text" id="inputProdNote" placeholder="vd: Bảo quản ngăn mát, nhà cung cấp X" class="custom-input">
+                    </div>
+                    <div id="productModalMsg" class="swap-msg"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="btnCancelProductModal">Hủy</button>
+                    <button type="submit" class="btn-primary" id="btnSaveProductModal">
+                        <i class="fa-solid fa-floppy-disk"></i> Lưu Sản Phẩm
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 5: Ghi Nhận Bán Hàng Nhanh Trong Ca / Ngoài Ca -->
+    <div class="modal-backdrop" id="recordSaleModal">
+        <div class="modal-box glass-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-cash-register"></i> Ghi Nhận Bán Hàng & Doanh Thu F&B</h3>
+                <button class="modal-close" id="btnCloseSaleModal">&times;</button>
+            </div>
+            <form id="recordSaleForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Chọn Sản Phẩm Bán <span style="color: var(--cinnabar);">*</span>:</label>
+                        <select id="saleSelectProduct" required class="custom-select"></select>
+                        <small id="saleProductStockHint" class="field-note" style="color: var(--goldleaf);"></small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Số Lượng Bán <span style="color: var(--cinnabar);">*</span>:</label>
+                            <input type="number" id="saleInputQty" min="1" value="1" required class="custom-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Kênh / Điểm Bán Hàng:</label>
+                            <select id="saleSelectChannel" class="custom-select">
+                                <option value="Phòng Thanh Niên">Phòng Thanh Niên (Trong ca)</option>
+                                <option value="Điểm Bán Ngoài (Quán Café A)">Điểm Bán Ngoài (Quán Café A)</option>
+                                <option value="Điểm Bán Ngoài (Quán Café B)">Điểm Bán Ngoài (Quán Café B)</option>
+                                <option value="Điểm Bán Ngoài (Quán Café C)">Điểm Bán Ngoài (Quán Café C)</option>
+                                <option value="Sự Kiện Đặc Biệt">Sự Kiện Đặc Biệt / Khác</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Người Bán / Trực Ca Ghi Nhận:</label>
+                        <input type="text" id="saleInputSeller" placeholder="vd: Nguyễn Văn A (Ban Tài Chính)" class="custom-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ghi Chú Giao Dịch:</label>
+                        <input type="text" id="saleInputNote" placeholder="vd: Khách mua mang đi ca chiều" class="custom-input">
+                    </div>
+
+                    <div class="sale-summary-box" id="saleSummaryBox">
+                        <span>Tổng tiền thu: <strong id="saleCalcTotal" style="color: var(--goldleaf); font-size: 1.2rem;">0 ₫</strong></span>
+                    </div>
+
+                    <div id="saleModalMsg" class="swap-msg"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="btnCancelSaleModal">Đóng</button>
+                    <button type="submit" class="btn-primary" id="btnSaveSaleModal">
+                        <i class="fa-solid fa-check"></i> Xác Nhận Bán & Cập Nhật Tồn Kho
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 6: Modal Xác Nhận 2 Bước (Confirmation Dialog) -->
+    <div class="modal-backdrop" id="confirmModal">
+        <div class="modal-box glass-card" style="max-width: 460px; border: 1px solid var(--cinnabar-rule);">
+            <div class="modal-header">
+                <h3 id="confirmModalTitle" style="color: var(--cinnabar-lt); display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>Xác Nhận Hành Động</span>
+                </h3>
+                <button class="modal-close" id="btnCloseConfirmModal">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 1.25rem;">
+                <p id="confirmModalMessage" style="font-size: 13.5px; color: var(--ink-hi); line-height: 1.65; margin: 0 0 1.25rem 0;">
+                    Bạn có chắc chắn muốn thực hiện hành động này?
+                </p>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn-secondary" id="btnConfirmCancel" style="padding: 8px 18px;">Hủy Bỏ</button>
+                    <button type="button" class="btn-danger-red" id="btnConfirmProceed" style="padding: 8px 18px;">
+                        <i class="fa-solid fa-trash-can"></i> Xác Nhận Xóa
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+        Trạng thái chờ giải. OR-Tools mất 15–25s trên máy này và lâu hơn trên
+        Render (CPU yếu), nên phải nói rõ đang làm gì và đã chạy bao lâu —
+        không thì người dùng tưởng web treo rồi bấm lại.
+        Ba bước này là ba bước thật, không phải thanh tiến trình giả: server
+        không báo tiến độ giữa chừng nên không bịa ra các mốc bên trong.
+    -->
+    <div class="solve-overlay" id="solveOverlay" role="status" aria-live="polite">
+        <div class="solve-box">
+            <h4>Đang xếp ca</h4>
+            <p>Bộ giải OR-Tools đang tìm phương án phân công công bằng nhất.
+               Thường mất 15–30 giây. Đừng đóng tab.</p>
+            <div class="solve-steps">
+                <div class="solve-step" data-step="1"><i class="fa-regular fa-circle"></i> Gửi tham số và danh sách nhân sự</div>
+                <div class="solve-step" data-step="2"><i class="fa-regular fa-circle"></i> Bộ giải đang chạy</div>
+                <div class="solve-step" data-step="3"><i class="fa-regular fa-circle"></i> Dựng bảng phân ca</div>
+            </div>
+            <p class="solve-elapsed">Đã chạy <b id="solveElapsed">0</b> giây</p>
+        </div>
+    </div>
+
+    <!-- MODAL: CHỈNH SỬA THÀNH VIÊN -->
+    <div class="modal-backdrop" id="editMemberModal">
+        <div class="modal-box glass-card" style="max-width: 900px; width: 95%;">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-user-gear"></i> Chỉnh Sửa Lịch Rảnh &amp; Thông Tin Thành Viên</h3>
+                <button class="modal-close" id="btnCloseMemberModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editMemberForm">
+                    <input type="hidden" id="editMemberId" />
+                    <div class="form-row" style="margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label>Họ và Tên <span style="color: var(--cinnabar);">*</span>:</label>
+                            <input type="text" id="editMemberName" required class="custom-input" />
+                        </div>
+                        <div class="form-group">
+                            <label>Ban <span style="color: var(--cinnabar);">*</span>:</label>
+                            <input type="text" id="editMemberDept" required class="custom-input" />
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label>Đối Tượng / Công Việc:</label>
+                            <input type="text" id="editMemberJob" class="custom-input" placeholder="vd: Học sinh ( Cấp 3 )" />
+                        </div>
+                        <div class="form-group">
+                            <label>Số Điện Thoại:</label>
+                            <input type="text" id="editMemberPhone" class="custom-input" placeholder="vd: 0923883626" />
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;">
+                            <input type="checkbox" id="editMemberStandby" style="width: auto; margin: 0; transform: scale(1.1);" />
+                            <span><strong>Thành viên thuộc Đội Ứng Biến Linh Hoạt</strong> (Sẵn sàng nhận ca đột xuất)</span>
+                        </label>
+                    </div>
+
+                    <div style="margin-top: 1.5rem;">
+                        <h4 style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; color: var(--goldleaf);">
+                            <i class="fa-solid fa-calendar-days"></i> Cấu hình Khung giờ Rảnh (R) &amp; Cam kết (CK)
+                        </h4>
+                        <p style="font-size: 0.85rem; color: var(--ink-dim); margin-bottom: 1rem; line-height: 1.4;">
+                            💡 <strong>Rảnh (R)</strong>: Thành viên có thể được xếp vào ca này. <br/>
+                            💡 <strong>Cam kết (CK)</strong>: Khung giờ cam kết trực (bộ giải ưu tiên tối đa xếp vào đây, tự động coi là Rảnh).
+                        </p>
+
+                        <div class="table-responsive">
+                            <table class="data-table" style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left;">Thứ / Ngày</th>
+                                        <th style="text-align: center;">07h00 - 09h30</th>
+                                        <th style="text-align: center;">09h35 - 12h00</th>
+                                        <th style="text-align: center;">12h05 - 14h00</th>
+                                        <th style="text-align: center;">14h05 - 16h05</th>
+                                        <th style="text-align: center;">16h10 - 18h00</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="editMemberScheduleBody">
+                                    <!-- Populated dynamically by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="btnCancelMemberModal">Hủy Bỏ</button>
+                <button type="button" class="btn-primary" id="btnSaveMemberModal"><i class="fa-solid fa-floppy-disk"></i> Lưu Cập Nhật</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
