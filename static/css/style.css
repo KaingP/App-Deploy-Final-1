@@ -23,61 +23,199 @@
 
 :root {
     /* --- Bề mặt tối: đen ấm của sơn mài trên gỗ, không phải #000 --- */
-    --lacquer:        #17110E;
-    --lacquer-2:      #1F1813;   /* panel nổi trên nền */
-    --lacquer-3:      #2A211A;   /* input, ô lõm */
-    --lacquer-4:      #352A21;   /* hover */
+    --lacquer: #17110e;
+    --lacquer-2: #1f1813;
+    --lacquer-3: #2a211a;
+    --lacquer-4: #352a21;
 
-    /* --- Bề mặt sáng: vỏ trứng, một chất liệu sơn mài thật --- */
-    --eggshell:       #EDE4D3;
-    --eggshell-2:     #E3D8C4;   /* dòng kẻ xen kẽ, ô nhấn */
-    --eggshell-3:     #D8CBB3;
+    --eggshell: #ede4d3;
+    --eggshell-2: #e3d8c4;
+    --eggshell-3: #d8cbb3;
 
-    /* --- Accent, nghĩa cố định --- */
-    --cinnabar:       #B7332A;   /* đỏ son */
-    --cinnabar-lt:    #E8705F;   /* biến thể đọc được trên nền tối */
-    --goldleaf:       #C9A227;   /* vàng quỳ */
-    --goldleaf-dk:    #7A5F0A;   /* biến thể đọc được trên nền vỏ trứng */
-    --patina:         #3F6B5F;   /* xanh gỉ trống đồng Đông Sơn */
-    --patina-lt:      #6FB39C;   /* biến thể đọc được trên nền tối */
+    --cinnabar: #b7332a;
+    --cinnabar-lt: #e8705f;
+    --goldleaf: #c9a227;
+    --goldleaf-dk: #7a5f0a;
+    --patina: #3f6b5f;
+    --patina-lt: #6fb39c;
 
-    /* --- Chữ trên nền tối (đã kiểm tương phản WCAG AA) --- */
-    --ink-hi:         #F2E9DA;   /* 15:1  — tiêu đề */
-    --ink:            #CDBFAE;   /* 10:1  — nội dung */
-    --ink-dim:        #9A8878;   /* 5.5:1 — chú thích */
-    --ink-faint:      #6A5A4C;   /* chỉ dùng cho đường kẻ, KHÔNG dùng cho chữ */
+    --ink-hi: #f2e9da;
+    --ink: #cdbfae;
+    --ink-dim: #9a8878;
+    --ink-faint: #6a5a4c;
 
-    /* --- Chữ trên nền vỏ trứng --- */
-    --paper-ink:      #1A1410;   /* 14:1 */
-    --paper-ink-dim:  #6B5B4E;   /* 5.4:1 */
-    --paper-rule:     #C9BCA5;
+    --paper-ink: #1a1410;
+    --paper-ink-dim: #6b5b4e;
+    --paper-rule: #c9bca5;
 
-    /* --- Đường kẻ, khung --- */
-    --rule:           #4A3B33;
-    --rule-soft:      #33281F;
+    --rule: #4a3b33;
+    --rule-soft: #33281f;
 
-    /* --- Chữ --- */
-    --font-display: 'Bricolage Grotesque', 'Be Vietnam Pro', system-ui, sans-serif;
-    --font-body:    'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
-    --font-mono:    'JetBrains Mono', ui-monospace, 'Courier New', monospace;
+    --font-display:
+        "Bricolage Grotesque", "Be Vietnam Pro", system-ui, sans-serif;
+    --font-body: "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "Courier New", monospace;
 
-    /* --- Nhịp --- */
-    --gap:      20px;
-    --gap-sm:   12px;
-    --gap-lg:   28px;
-    --rail-w:   264px;
+    --gap: 20px;
+    --gap-sm: 12px;
+    --gap-lg: 30px;
+    --rail-w: 275px;
 
-    /* Bảng gọi ca là biểu mẫu, không phải thẻ bo tròn. Góc gần như vuông. */
-    --radius:   3px;
-    --radius-sm: 2px;
+    --radius: 6px;
+    --radius-sm: 4px;
 
-    /* Giấy đặt trên mặt bàn sơn mài thì phải có bóng thật */
-    --lift-paper: 0 20px 44px -16px rgba(0, 0, 0, .78), 0 2px 4px rgba(0, 0, 0, .4);
-    --lift-panel: 0 1px 0 rgba(242, 233, 218, .035) inset;
-    --lift-modal: 0 40px 90px -20px rgba(0, 0, 0, .85);
+    --lift-paper:
+        0 20px 44px -16px rgba(0, 0, 0, 0.78), 0 2px 4px rgba(0, 0, 0, 0.4);
+    --lift-panel: 0 1px 0 rgba(242, 233, 218, 0.035) inset;
+    --lift-modal: 0 40px 90px -20px rgba(0, 0, 0, 0.85);
 
     --speed: 140ms;
-    --ease: cubic-bezier(.32, .72, .29, 1);
+    --ease: cubic-bezier(0.32, 0.72, 0.29, 1);
+}
+
+body.light-theme {
+    --lacquer: #f3f1ec;
+    --lacquer-2: #ffffff;
+    --lacquer-3: #f3f0e8;
+    --lacquer-4: #eae3d4;
+
+    --eggshell: #fcf9f2;
+    --eggshell-2: #f4eedc;
+    --eggshell-3: #e6dab7;
+
+    --cinnabar: #c53b2e;
+    --cinnabar-lt: #a92f25;
+    --goldleaf: #c79b1e;
+    --goldleaf-dk: #7a5b0b;
+    --patina: #3d7c67;
+    --patina-lt: #2c5d4d;
+
+    --ink-hi: #1f1a15;
+    --ink: #3b3129;
+    --ink-dim: #63574d;
+    --ink-faint: #8b7b6c;
+
+    --paper-ink: #1a1410;
+    --paper-ink-dim: #5e4f43;
+    --paper-rule: #d9c9a7;
+
+    --rule: #e2d5b9;
+    --rule-soft: #f0e7d8;
+
+    background-image:
+        radial-gradient(
+            1100px 620px at 12% -10%,
+            rgba(199, 155, 30, 0.12),
+            transparent 60%
+        ),
+        radial-gradient(
+            900px 520px at 100% 8%,
+            rgba(61, 124, 103, 0.08),
+            transparent 62%
+        );
+}
+
+body.light-theme .glass-card,
+body.light-theme .auth-bar,
+body.light-theme .theme-toggle,
+body.light-theme .custom-input,
+body.light-theme .custom-select,
+body.light-theme .search-box input,
+body.light-theme .filter-bar,
+body.light-theme .btn-upload-trigger,
+body.light-theme .btn-quick-run,
+body.light-theme .btn-auth-toggle,
+body.light-theme .role-badge,
+body.light-theme .export-card,
+body.light-theme .nav-item,
+body.light-theme .sidebar,
+body.light-theme .modal-content,
+body.light-theme .shift-card,
+body.light-theme .agent-card,
+body.light-theme .data-table td,
+body.light-theme .data-table th {
+    border-color: var(--rule) !important;
+    box-shadow: inset 0 0 0 1px rgba(31, 26, 21, 0.02);
+}
+
+body.light-theme,
+body.light-theme .topbar-left h1,
+body.light-theme .topbar-left .subtitle,
+body.light-theme .nav-item,
+body.light-theme .filter-group label,
+body.light-theme .custom-input,
+body.light-theme .custom-select,
+body.light-theme .search-box input,
+body.light-theme .form-group > label,
+body.light-theme .card-header p,
+body.light-theme .data-table,
+body.light-theme .table-empty,
+body.light-theme .swap-msg,
+body.light-theme .badge-gold,
+body.light-theme .role-badge,
+body.light-theme .theme-toggle,
+body.light-theme #liveRealTimeClock,
+body.light-theme .btn-auth-toggle,
+body.light-theme #liveShiftSelect,
+body.light-theme #livePOSQuickSelect,
+body.light-theme #livePOSSelectSeller,
+body.light-theme #livePOSInputNote,
+body.light-theme .modal-title,
+body.light-theme .modal-body,
+body.light-theme .modal-footer,
+body.light-theme .summary-box,
+body.light-theme .kpi-card,
+body.light-theme .inventory-card,
+body.light-theme .duty-board,
+body.light-theme th,
+body.light-theme td {
+    color: var(--ink-hi) !important;
+}
+
+body.light-theme .topbar-left .subtitle,
+body.light-theme .form-group small,
+body.light-theme .field-note,
+body.light-theme .export-info p,
+body.light-theme .table-subtle,
+body.light-theme .muted-text,
+body.light-theme .data-table td.small,
+body.light-theme .text-dim {
+    color: var(--ink-dim) !important;
+}
+
+body.light-theme .custom-input::placeholder,
+body.light-theme .custom-select::placeholder,
+body.light-theme .search-box input::placeholder,
+body.light-theme #livePOSInputNote::placeholder {
+    color: var(--ink-faint) !important;
+}
+
+body.light-theme .filter-btn,
+body.light-theme .btn-action-sm,
+body.light-theme .btn-primary,
+body.light-theme .btn-secondary,
+body.light-theme .btn-quick-run,
+body.light-theme .btn-upload-trigger,
+body.light-theme .btn-export,
+body.light-theme .btn-preview,
+body.light-theme .btn-add-green,
+body.light-theme .btn-danger-red,
+body.light-theme .btn-copy-gsheets,
+body.light-theme .btn-card-edit,
+body.light-theme .btn-delete-row {
+    border-color: var(--rule) !important;
+}
+
+body.light-theme .auth-bar {
+    background: rgba(255, 255, 255, 0.78);
+}
+
+body.light-theme .theme-toggle {
+    background: rgba(255, 255, 255, 0.78);
+}
+
+body.light-theme .modal-backdrop {
+    background: rgba(17, 16, 15, 0.28);
 }
 
 /* ==========================================================================
@@ -86,11 +224,18 @@
 
 *,
 *::before,
-*::after { box-sizing: border-box; }
+*::after {
+    box-sizing: border-box;
+}
 
-* { margin: 0; padding: 0; }
+* {
+    margin: 0;
+    padding: 0;
+}
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+    -webkit-text-size-adjust: 100%;
+}
 
 body {
     font-family: var(--font-body);
@@ -100,24 +245,46 @@ body {
     background: var(--lacquer);
     /* Vệt sơn mài: hai vầng sáng rất mờ, đủ để mặt phẳng không chết cứng */
     background-image:
-        radial-gradient(1100px 620px at 12% -10%, rgba(201, 162, 39, .055), transparent 60%),
-        radial-gradient(900px 520px at 100% 8%, rgba(63, 107, 95, .05), transparent 62%);
+        radial-gradient(
+            1100px 620px at 12% -10%,
+            rgba(201, 162, 39, 0.055),
+            transparent 60%
+        ),
+        radial-gradient(
+            900px 520px at 100% 8%,
+            rgba(63, 107, 95, 0.05),
+            transparent 62%
+        );
     background-attachment: fixed;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     min-height: 100vh;
 }
 
-img, svg { display: block; max-width: 100%; }
+img,
+svg {
+    display: block;
+    max-width: 100%;
+}
 
-button, input, select, textarea {
+button,
+input,
+select,
+textarea {
     font: inherit;
     color: inherit;
 }
 
-button { background: none; border: 0; cursor: pointer; }
+button {
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
 
-a { color: var(--goldleaf); text-decoration: none; }
+a {
+    color: var(--goldleaf);
+    text-decoration: none;
+}
 
 /* Focus thấy rõ trên cả nền tối và nền vỏ trứng */
 :focus-visible {
@@ -127,32 +294,51 @@ a { color: var(--goldleaf); text-decoration: none; }
 }
 .paper :focus-visible,
 .duty-board :focus-visible,
-.data-table :focus-visible { outline-color: var(--goldleaf-dk); }
+.data-table :focus-visible {
+    outline-color: var(--goldleaf-dk);
+}
 
-::selection { background: var(--goldleaf); color: var(--lacquer); }
+::selection {
+    background: var(--goldleaf);
+    color: var(--lacquer);
+}
 
 /* Thanh cuộn hoà vào nền sơn mài */
-* { scrollbar-width: thin; scrollbar-color: var(--rule) transparent; }
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: transparent; }
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+}
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
 ::-webkit-scrollbar-thumb {
     background: var(--rule);
     border: 3px solid var(--lacquer);
     border-radius: 6px;
 }
-::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+::-webkit-scrollbar-thumb:hover {
+    background: var(--ink-faint);
+}
 
 /* ==========================================================================
    3. TYPOGRAPHY
    ========================================================================== */
 
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
     font-family: var(--font-display);
     font-weight: 700;
     line-height: 1.14;
     color: var(--ink-hi);
-    font-variation-settings: 'wdth' 88;   /* hơi hẹp: giống chữ trên bảng phân công */
-    letter-spacing: -.012em;
+    font-variation-settings: "wdth" 88; /* hơi hẹp: giống chữ trên bảng phân công */
+    letter-spacing: -0.012em;
 }
 
 /* Số liệu, mã ca, giờ, SĐT — chữ số đều cột */
@@ -162,13 +348,16 @@ h1, h2, h3, h4, h5 {
 .cell-count,
 .kpi-data h3,
 .heat-cell-val,
-.time-dash { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.time-dash {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+}
 
 /* Nhãn nhỏ in hoa dãn chữ — ngôn ngữ của biểu mẫu */
 .eyebrow {
     font-size: 10px;
     font-weight: 600;
-    letter-spacing: .16em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-dim);
 }
@@ -181,6 +370,9 @@ h1, h2, h3, h4, h5 {
     display: grid;
     grid-template-columns: var(--rail-w) minmax(0, 1fr);
     min-height: 100vh;
+    max-width: 1600px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 /* --- Rail điều hướng (tối) ------------------------------------------------ */
@@ -219,8 +411,8 @@ h1, h2, h3, h4, h5 {
 
 .brand-text h2 {
     font-size: 15.5px;
-    letter-spacing: .05em;
-    font-variation-settings: 'wdth' 84;
+    letter-spacing: 0.05em;
+    font-variation-settings: "wdth" 84;
     color: var(--ink-hi);
 }
 
@@ -228,7 +420,7 @@ h1, h2, h3, h4, h5 {
     display: block;
     font-family: var(--font-mono);
     font-size: 9.5px;
-    letter-spacing: .1em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-dim);
     margin-top: 3px;
@@ -258,9 +450,10 @@ h1, h2, h3, h4, h5 {
     border-radius: var(--radius-sm);
     /* Vạch chỉ mục bên trái: rỗng khi chưa chọn, vàng quỳ khi đang xem */
     box-shadow: inset 2px 0 0 transparent;
-    transition: background var(--speed) var(--ease),
-                color var(--speed) var(--ease),
-                box-shadow var(--speed) var(--ease);
+    transition:
+        background var(--speed) var(--ease),
+        color var(--speed) var(--ease),
+        box-shadow var(--speed) var(--ease);
 }
 
 .nav-item i {
@@ -273,17 +466,26 @@ h1, h2, h3, h4, h5 {
 
 /* Mỗi tab có hai nhãn: đầy đủ cho rail, ngắn cho tab bar đáy trên điện thoại.
    "Xử Lý Ca Vắng & Backup" không thể nhồi vào ô rộng 75px. */
-.nav-item .nav-short { display: none; }
+.nav-item .nav-short {
+    display: none;
+}
 
-.nav-item:hover { background: var(--lacquer-3); color: var(--ink-hi); }
-.nav-item:hover i { color: var(--ink); }
+.nav-item:hover {
+    background: var(--lacquer-3);
+    color: var(--ink-hi);
+}
+.nav-item:hover i {
+    color: var(--ink);
+}
 
 .nav-item.active {
     background: var(--lacquer-3);
     color: var(--ink-hi);
     box-shadow: inset 2px 0 0 var(--goldleaf);
 }
-.nav-item.active i { color: var(--goldleaf); }
+.nav-item.active i {
+    color: var(--goldleaf);
+}
 
 .sidebar-footer {
     flex: 0 0 auto;
@@ -336,28 +538,34 @@ h1, h2, h3, h4, h5 {
     top: 0;
     z-index: 40;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
     gap: var(--gap);
     flex-wrap: wrap;
-    padding: 20px var(--gap-lg);
-    background: rgba(23, 17, 14, .88);
+    padding: 22px calc(var(--gap-lg) + 6px);
+    background: rgba(23, 17, 14, 0.84);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--rule);
 }
 
-.topbar-left { min-width: 0; }
+body.light-theme .topbar {
+    background: rgba(255, 255, 255, 0.82);
+}
+
+.topbar-left {
+    min-width: 0;
+}
 
 .topbar-left h1 {
     font-size: clamp(19px, 2.1vw, 25px);
-    font-variation-settings: 'wdth' 86;
-    letter-spacing: -.02em;
+    font-variation-settings: "wdth" 86;
+    letter-spacing: -0.02em;
 }
 
 .topbar-left .subtitle {
     font-family: var(--font-mono);
     font-size: 10.5px;
-    letter-spacing: .1em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-dim);
     margin-top: 6px;
@@ -373,13 +581,17 @@ h1, h2, h3, h4, h5 {
 /* --- Tab --- */
 .tab-content {
     display: none;
-    padding: var(--gap-lg);
+    padding: calc(var(--gap-lg) + 4px) 26px 30px;
     flex: 1 1 auto;
     min-width: 0;
 }
-.tab-content.active { display: block; }
+.tab-content.active {
+    display: block;
+}
 
-.tab-content > * + * { margin-top: var(--gap); }
+.tab-content > * + * {
+    margin-top: var(--gap);
+}
 
 /* ==========================================================================
    5. BUTTONS
@@ -410,10 +622,11 @@ h1, h2, h3, h4, h5 {
     color: var(--ink-hi);
     background: var(--lacquer-3);
     cursor: pointer;
-    transition: background var(--speed) var(--ease),
-                border-color var(--speed) var(--ease),
-                color var(--speed) var(--ease),
-                transform var(--speed) var(--ease);
+    transition:
+        background var(--speed) var(--ease),
+        border-color var(--speed) var(--ease),
+        color var(--speed) var(--ease),
+        transform var(--speed) var(--ease);
 }
 
 .btn-primary:hover,
@@ -424,30 +637,40 @@ h1, h2, h3, h4, h5 {
 .btn-preview:hover,
 .btn-add-green:hover,
 .btn-danger-red:hover,
-.btn-copy-gsheets:hover { transform: translateY(-1px); }
+.btn-copy-gsheets:hover {
+    transform: translateY(-1px);
+}
 
 .btn-primary:active,
 .btn-quick-run:active,
-.btn-export:active { transform: translateY(0); }
+.btn-export:active {
+    transform: translateY(0);
+}
 
 /* Hành động chính: vàng quỳ đầy, chữ đen — mỗi vùng chỉ có MỘT nút như thế */
 .btn-primary,
 .btn-quick-run {
     background: var(--goldleaf);
     border-color: var(--goldleaf);
-    color: #1A1207;
+    color: #1a1207;
 }
 .btn-primary:hover,
-.btn-quick-run:hover { background: #D9B233; border-color: #D9B233; }
+.btn-quick-run:hover {
+    background: #d9b233;
+    border-color: #d9b233;
+}
 
 .btn-export,
 .btn-add-green {
     background: var(--patina);
     border-color: var(--patina);
-    color: #F0F7F3;
+    color: #f0f7f3;
 }
 .btn-export:hover,
-.btn-add-green:hover { background: #4A7D6E; border-color: #4A7D6E; }
+.btn-add-green:hover {
+    background: #4a7d6e;
+    border-color: #4a7d6e;
+}
 
 /* Center alignment for form action buttons */
 #btnAddCaNgoaiBtn,
@@ -465,11 +688,11 @@ h1, h2, h3, h4, h5 {
 .assign-line.line-overlimit {
     background: rgba(220, 38, 38, 0.25) !important;
     border: 1px solid var(--cinnabar) !important;
-    color: #FCA5A5 !important;
+    color: #fca5a5 !important;
     font-weight: 700;
 }
 .assign-line.line-overlimit .assign-name {
-    color: #FF8080 !important;
+    color: #ff8080 !important;
     font-weight: 700;
 }
 .shift-slip.has-overlimit-shift {
@@ -479,7 +702,7 @@ h1, h2, h3, h4, h5 {
 .agenda-person.overlimit {
     background: rgba(220, 38, 38, 0.25) !important;
     border: 1px solid var(--cinnabar) !important;
-    color: #FCA5A5 !important;
+    color: #fca5a5 !important;
 }
 
 .btn-danger-red {
@@ -487,7 +710,10 @@ h1, h2, h3, h4, h5 {
     border-color: var(--cinnabar);
     color: var(--cinnabar-lt);
 }
-.btn-danger-red:hover { background: var(--cinnabar); color: #FFF3F1; }
+.btn-danger-red:hover {
+    background: var(--cinnabar);
+    color: #fff3f1;
+}
 
 .btn-secondary,
 .btn-preview,
@@ -505,15 +731,19 @@ h1, h2, h3, h4, h5 {
     color: var(--ink-hi);
 }
 
-.btn-export { width: 100%; }
-.btn-preview { width: 100%; }
+.btn-export {
+    width: 100%;
+}
+.btn-preview {
+    width: 100%;
+}
 
 .btn-primary:disabled,
 .btn-quick-run:disabled,
 .btn-add-green:disabled,
 .btn-danger-red:disabled,
 .btn-export:disabled {
-    opacity: .5;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none;
 }
@@ -527,7 +757,10 @@ h1, h2, h3, h4, h5 {
     border-color: var(--cinnabar);
     color: var(--cinnabar);
 }
-.btn-delete-row:hover { background: var(--cinnabar); color: #FFF3F1; }
+.btn-delete-row:hover {
+    background: var(--cinnabar);
+    color: #fff3f1;
+}
 
 .btn-card-edit {
     width: 100%;
@@ -540,7 +773,12 @@ h1, h2, h3, h4, h5 {
    6. FORM CONTROLS
    ========================================================================== */
 
-.form-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
 
 .form-group > label,
 .filter-group > label {
@@ -549,13 +787,16 @@ h1, h2, h3, h4, h5 {
     gap: 7px;
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: .1em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-dim);
 }
 
 .form-group > label i,
-.filter-group > label i { color: var(--ink-faint); font-size: 11px; }
+.filter-group > label i {
+    color: var(--ink-faint);
+    font-size: 11px;
+}
 
 .form-group small {
     font-size: 11.5px;
@@ -585,16 +826,24 @@ h1, h2, h3, h4, h5 {
     background: var(--lacquer-3);
     border: 1px solid var(--rule);
     border-radius: var(--radius-sm);
-    transition: border-color var(--speed) var(--ease), background var(--speed) var(--ease);
+    transition:
+        border-color var(--speed) var(--ease),
+        background var(--speed) var(--ease);
 }
 
-.custom-input[type="number"] { font-family: var(--font-mono); }
+.custom-input[type="number"] {
+    font-family: var(--font-mono);
+}
 
 .custom-input::placeholder,
-.search-box input::placeholder { color: var(--ink-faint); }
+.search-box input::placeholder {
+    color: var(--ink-faint);
+}
 
 .custom-input:hover,
-.custom-select:hover { border-color: var(--ink-faint); }
+.custom-select:hover {
+    border-color: var(--ink-faint);
+}
 
 .custom-input:focus,
 .custom-select:focus,
@@ -602,7 +851,7 @@ h1, h2, h3, h4, h5 {
     outline: none;
     border-color: var(--goldleaf);
     background: var(--lacquer-4);
-    box-shadow: 0 0 0 3px rgba(201, 162, 39, .14);
+    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.14);
 }
 
 .custom-select {
@@ -612,14 +861,24 @@ h1, h2, h3, h4, h5 {
     background-image:
         linear-gradient(45deg, transparent 50%, var(--ink-dim) 50%),
         linear-gradient(135deg, var(--ink-dim) 50%, transparent 50%);
-    background-position: calc(100% - 17px) 51%, calc(100% - 12px) 51%;
-    background-size: 5px 5px, 5px 5px;
+    background-position:
+        calc(100% - 17px) 51%,
+        calc(100% - 12px) 51%;
+    background-size:
+        5px 5px,
+        5px 5px;
     background-repeat: no-repeat;
 }
 
-.custom-select option { background: var(--lacquer-3); color: var(--ink-hi); }
+.custom-select option {
+    background: var(--lacquer-3);
+    color: var(--ink-hi);
+}
 
-.custom-file-input { padding: 8px 12px; cursor: pointer; }
+.custom-file-input {
+    padding: 8px 12px;
+    cursor: pointer;
+}
 .custom-file-input::file-selector-button {
     margin-right: 12px;
     padding: 6px 12px;
@@ -643,13 +902,27 @@ h1, h2, h3, h4, h5 {
     align-items: center;
     gap: 8px;
 }
-.time-dash { color: var(--ink-dim); text-align: center; }
+.time-dash {
+    color: var(--ink-dim);
+    text-align: center;
+}
 
-.quota-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.quota-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 
-.action-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+.action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
 
-.config-form { display: flex; flex-direction: column; gap: var(--gap); }
+.config-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
 
 /* --- Checkbox --------------------------------------------------------- */
 .custom-checkbox {
@@ -663,7 +936,12 @@ h1, h2, h3, h4, h5 {
     user-select: none;
 }
 
-.custom-checkbox input { position: absolute; opacity: 0; width: 0; height: 0; }
+.custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
 
 .custom-checkbox .checkmark {
     flex: 0 0 auto;
@@ -673,17 +951,19 @@ h1, h2, h3, h4, h5 {
     background: var(--lacquer-3);
     border: 1px solid var(--rule);
     border-radius: var(--radius-sm);
-    transition: background var(--speed) var(--ease), border-color var(--speed) var(--ease);
+    transition:
+        background var(--speed) var(--ease),
+        border-color var(--speed) var(--ease);
 }
 
 .custom-checkbox .checkmark::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     margin: auto;
     width: 5px;
     height: 9px;
-    border: solid #1A1207;
+    border: solid #1a1207;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg) translate(-1px, -1px);
     opacity: 0;
@@ -694,14 +974,21 @@ h1, h2, h3, h4, h5 {
     background: var(--goldleaf);
     border-color: var(--goldleaf);
 }
-.custom-checkbox input:checked ~ .checkmark::after { opacity: 1; }
+.custom-checkbox input:checked ~ .checkmark::after {
+    opacity: 1;
+}
 .custom-checkbox input:focus-visible ~ .checkmark {
     outline: 2px solid var(--goldleaf);
     outline-offset: 2px;
 }
-.custom-checkbox:hover .checkmark { border-color: var(--ink-faint); }
+.custom-checkbox:hover .checkmark {
+    border-color: var(--ink-faint);
+}
 
-.custom-checkbox strong { font-weight: 600; color: var(--ink-hi); }
+.custom-checkbox strong {
+    font-weight: 600;
+    color: var(--ink-hi);
+}
 
 /* ==========================================================================
    7. PANELS  (`.glass-card` — tên cũ, nay là panel sơn mài)
@@ -712,10 +999,12 @@ h1, h2, h3, h4, h5 {
     border: 1px solid var(--rule);
     border-radius: var(--radius);
     box-shadow: var(--lift-panel);
-    padding: var(--gap);
+    padding: 18px 20px;
 }
 
-.max-width-card { max-width: 880px; }
+.max-width-card {
+    max-width: 880px;
+}
 
 .card-header {
     margin: calc(var(--gap) * -1) calc(var(--gap) * -1) var(--gap);
@@ -728,9 +1017,12 @@ h1, h2, h3, h4, h5 {
     align-items: center;
     gap: 10px;
     font-size: 14.5px;
-    font-variation-settings: 'wdth' 90;
+    font-variation-settings: "wdth" 90;
 }
-.card-header h3 i { font-size: 13px; color: var(--goldleaf); }
+.card-header h3 i {
+    font-size: 13px;
+    color: var(--goldleaf);
+}
 
 .card-header p {
     font-size: 12px;
@@ -746,9 +1038,9 @@ h1, h2, h3, h4, h5 {
 }
 
 .disabled-panel {
-    opacity: .42;
+    opacity: 0.42;
     pointer-events: none;
-    filter: saturate(.3);
+    filter: saturate(0.3);
 }
 
 /* Trạng thái tải / rỗng */
@@ -764,7 +1056,9 @@ h1, h2, h3, h4, h5 {
     border: 1px dashed var(--rule);
     border-radius: var(--radius);
 }
-.loading-spinner i { color: var(--goldleaf); }
+.loading-spinner i {
+    color: var(--goldleaf);
+}
 
 /* ==========================================================================
    8. FILTER BAR
@@ -773,12 +1067,17 @@ h1, h2, h3, h4, h5 {
 .filter-bar {
     display: flex;
     align-items: flex-end;
-    gap: var(--gap);
+    gap: 18px;
     flex-wrap: wrap;
-    padding: 14px var(--gap);
+    padding: 16px 18px;
 }
 
-.filter-group { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
 
 .btn-group {
     display: flex;
@@ -796,17 +1095,26 @@ h1, h2, h3, h4, h5 {
     color: var(--ink-dim);
     background: transparent;
     border-right: 1px solid var(--rule);
-    transition: background var(--speed) var(--ease), color var(--speed) var(--ease);
+    transition:
+        background var(--speed) var(--ease),
+        color var(--speed) var(--ease);
 }
-.filter-btn:last-child { border-right: 0; }
-.filter-btn:hover { background: var(--lacquer-3); color: var(--ink-hi); }
+.filter-btn:last-child {
+    border-right: 0;
+}
+.filter-btn:hover {
+    background: var(--lacquer-3);
+    color: var(--ink-hi);
+}
 .filter-btn.active {
     background: var(--goldleaf);
-    color: #1A1207;
+    color: #1a1207;
     font-weight: 600;
 }
 
-.filter-bar .filter-group:has(#dayFilter) { min-width: 210px; }
+.filter-bar .filter-group:has(#dayFilter) {
+    min-width: 210px;
+}
 
 .search-box {
     position: relative;
@@ -822,7 +1130,9 @@ h1, h2, h3, h4, h5 {
     color: var(--ink-faint);
     pointer-events: none;
 }
-.search-box input { padding-left: 34px; }
+.search-box input {
+    padding-left: 34px;
+}
 
 /* ==========================================================================
    9. SIGNATURE — BẢNG PHÂN CA  (nền vỏ trứng)
@@ -851,21 +1161,23 @@ h1, h2, h3, h4, h5 {
 
 .board-top h3 {
     font-size: 13px;
-    letter-spacing: .17em;
+    letter-spacing: 0.17em;
     text-transform: uppercase;
-    font-variation-settings: 'wdth' 82;
+    font-variation-settings: "wdth" 82;
     color: var(--paper-ink);
 }
 
 .board-top .board-meta {
     font-family: var(--font-mono);
     font-size: 10.5px;
-    letter-spacing: .07em;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
     color: var(--paper-ink-dim);
 }
 
-.board-scroll { overflow-x: auto; }
+.board-scroll {
+    overflow-x: auto;
+}
 
 .duty-board {
     display: grid;
@@ -884,20 +1196,25 @@ h1, h2, h3, h4, h5 {
     font-family: var(--font-mono);
     font-size: 10.5px;
     font-weight: 700;
-    letter-spacing: .1em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     text-align: center;
     color: var(--paper-ink);
 }
-.board-daylabel:last-child { border-right: 0; }
-.board-corner { text-align: left; color: var(--paper-ink-dim); }
+.board-daylabel:last-child {
+    border-right: 0;
+}
+.board-corner {
+    text-align: left;
+    color: var(--paper-ink-dim);
+}
 
 .board-daylabel small {
     display: block;
     margin-top: 2px;
     font-size: 8.5px;
     font-weight: 500;
-    letter-spacing: .04em;
+    letter-spacing: 0.04em;
     text-transform: none;
     color: var(--paper-ink-dim);
 }
@@ -938,7 +1255,9 @@ h1, h2, h3, h4, h5 {
     border-bottom: 1px solid var(--paper-rule);
     transition: background var(--speed) var(--ease);
 }
-.cell:hover { background: #F5EEE0; }
+.cell:hover {
+    background: #f5eee0;
+}
 
 .cell-none {
     display: grid;
@@ -947,7 +1266,7 @@ h1, h2, h3, h4, h5 {
 }
 /* Ô không có ca: một vạch mờ, không phải khoảng trắng vô nghĩa */
 .cell-none::after {
-    content: '';
+    content: "";
     width: 16px;
     height: 1px;
     background: var(--paper-rule);
@@ -969,7 +1288,9 @@ h1, h2, h3, h4, h5 {
     padding-top: 6px;
     border-top: 1px solid var(--paper-rule);
 }
-.shift-slip:hover .cell-code { color: var(--paper-ink); }
+.shift-slip:hover .cell-code {
+    color: var(--paper-ink);
+}
 
 .cell-top {
     display: flex;
@@ -981,7 +1302,7 @@ h1, h2, h3, h4, h5 {
 .cell-code {
     font-size: 9.5px;
     font-weight: 500;
-    letter-spacing: .06em;
+    letter-spacing: 0.06em;
     color: var(--paper-ink-dim);
     transition: color var(--speed) var(--ease);
 }
@@ -993,13 +1314,25 @@ h1, h2, h3, h4, h5 {
 }
 
 /* Ô thiếu người: đỏ son, đọc được ngay từ xa */
-.cell-short { background: #F3E3DC; }
-.cell-short:hover { background: #F7E9E3; }
-.cell-short .cell-count { color: var(--cinnabar); }
-.cell-short .cell-code { color: #8A4B41; }
+.cell-short {
+    background: #f3e3dc;
+}
+.cell-short:hover {
+    background: #f7e9e3;
+}
+.cell-short .cell-count {
+    color: var(--cinnabar);
+}
+.cell-short .cell-code {
+    color: #8a4b41;
+}
 
 /* --- Dòng phân công: xương sống của phép ẩn dụ "biểu mẫu" --- */
-.assign-lines { display: flex; flex-direction: column; gap: 2px; }
+.assign-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
 
 .assign-line {
     display: flex;
@@ -1023,7 +1356,9 @@ h1, h2, h3, h4, h5 {
 }
 
 /* Đã có người: nét kẻ đậm, tên đen */
-.line-filled { border-bottom-color: var(--paper-ink); }
+.line-filled {
+    border-bottom-color: var(--paper-ink);
+}
 
 /* Dự phòng: nét gạch chấm, chữ nhạt hơn — vẫn là người, nhưng ở tuyến sau */
 .line-dp {
@@ -1038,10 +1373,10 @@ h1, h2, h3, h4, h5 {
     color: transparent;
 }
 .line-blank::before {
-    content: 'chờ xếp';
+    content: "chờ xếp";
     font-family: var(--font-mono);
     font-size: 8.5px;
-    letter-spacing: .09em;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
     color: var(--cinnabar);
 }
@@ -1056,7 +1391,7 @@ h1, h2, h3, h4, h5 {
 .cell-more {
     font-family: var(--font-mono);
     font-size: 9px;
-    letter-spacing: .06em;
+    letter-spacing: 0.06em;
     color: var(--paper-ink-dim);
 }
 
@@ -1071,22 +1406,39 @@ h1, h2, h3, h4, h5 {
     background: var(--eggshell-2);
     font-family: var(--font-mono);
     font-size: 9.5px;
-    letter-spacing: .07em;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
     color: var(--paper-ink-dim);
 }
-.board-legend span { display: flex; align-items: center; gap: 7px; }
+.board-legend span {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
 .board-legend i {
     width: 20px;
     height: 0;
     border-bottom: 2px solid currentColor;
 }
-.board-legend .lg-filled { color: var(--paper-ink); }
-.board-legend .lg-dp { color: var(--patina); }
-.board-legend .lg-dp i { border-bottom-style: dotted; }
-.board-legend .lg-blank { color: var(--cinnabar); }
-.board-legend .lg-lead { color: var(--goldleaf-dk); }
-.board-legend .lg-lead i { border: 0; width: auto; }
+.board-legend .lg-filled {
+    color: var(--paper-ink);
+}
+.board-legend .lg-dp {
+    color: var(--patina);
+}
+.board-legend .lg-dp i {
+    border-bottom-style: dotted;
+}
+.board-legend .lg-blank {
+    color: var(--cinnabar);
+}
+.board-legend .lg-lead {
+    color: var(--goldleaf-dk);
+}
+.board-legend .lg-lead i {
+    border: 0;
+    width: auto;
+}
 
 /* --- Dải cảnh báo trên đầu bảng --- */
 .alert-strip {
@@ -1101,23 +1453,35 @@ h1, h2, h3, h4, h5 {
     background: var(--lacquer-2);
     color: var(--ink);
 }
-.alert-strip i { font-size: 14px; }
+.alert-strip i {
+    font-size: 14px;
+}
 .alert-strip.warn {
     border-color: var(--cinnabar);
-    background: rgba(183, 51, 42, .14);
-    color: #F6D9D4;
+    background: rgba(183, 51, 42, 0.14);
+    color: #f6d9d4;
 }
-.alert-strip.warn i { color: var(--cinnabar-lt); }
-.alert-strip.ok { border-color: var(--rule); }
-.alert-strip.ok i { color: var(--patina-lt); }
-.alert-strip b { font-family: var(--font-mono); }
+.alert-strip.warn i {
+    color: var(--cinnabar-lt);
+}
+.alert-strip.ok {
+    border-color: var(--rule);
+}
+.alert-strip.ok i {
+    color: var(--patina-lt);
+}
+.alert-strip b {
+    font-family: var(--font-mono);
+}
 
 /* ==========================================================================
    10. AGENDA — biến thể bảng phân ca cho điện thoại
    Cùng dữ liệu, đổi cách đọc: chọn ngày rồi cuộn dọc theo khung giờ.
    ========================================================================== */
 
-.agenda { display: none; }
+.agenda {
+    display: none;
+}
 
 .agenda-days {
     display: flex;
@@ -1126,7 +1490,9 @@ h1, h2, h3, h4, h5 {
     padding: 3px 0 9px;
     scrollbar-width: none;
 }
-.agenda-days::-webkit-scrollbar { display: none; }
+.agenda-days::-webkit-scrollbar {
+    display: none;
+}
 
 .agenda-day {
     flex: 1 0 auto;
@@ -1140,23 +1506,32 @@ h1, h2, h3, h4, h5 {
     background: var(--lacquer-2);
     border: 1px solid var(--rule);
     border-radius: var(--radius-sm);
-    transition: background var(--speed) var(--ease), color var(--speed) var(--ease);
+    transition:
+        background var(--speed) var(--ease),
+        color var(--speed) var(--ease);
 }
 .agenda-day small {
     display: block;
     margin-top: 3px;
     font-size: 9px;
     font-weight: 500;
-    letter-spacing: .04em;
+    letter-spacing: 0.04em;
 }
-.agenda-day.has-gap { border-color: var(--cinnabar); color: var(--cinnabar-lt); }
+.agenda-day.has-gap {
+    border-color: var(--cinnabar);
+    color: var(--cinnabar-lt);
+}
 .agenda-day.active {
     background: var(--goldleaf);
     border-color: var(--goldleaf);
-    color: #1A1207;
+    color: #1a1207;
 }
 
-.agenda-list { display: flex; flex-direction: column; gap: 10px; }
+.agenda-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
 .agenda-shift {
     background: var(--eggshell);
@@ -1188,10 +1563,17 @@ h1, h2, h3, h4, h5 {
     text-align: right;
 }
 
-.agenda-shift.is-short { border-color: var(--cinnabar); }
-.agenda-shift.is-short .agenda-shift-head { background: #F3E3DC; }
+.agenda-shift.is-short {
+    border-color: var(--cinnabar);
+}
+.agenda-shift.is-short .agenda-shift-head {
+    background: #f3e3dc;
+}
 
-.agenda-roster { display: block; padding: 6px 13px 11px; }
+.agenda-roster {
+    display: block;
+    padding: 6px 13px 11px;
+}
 
 .agenda-person {
     display: flex;
@@ -1203,7 +1585,9 @@ h1, h2, h3, h4, h5 {
     color: var(--paper-ink);
     border-bottom: 1px solid var(--paper-rule);
 }
-.agenda-person:last-child { border-bottom: 0; }
+.agenda-person:last-child {
+    border-bottom: 0;
+}
 .agenda-person .dot {
     flex: 0 0 auto;
     width: 7px;
@@ -1211,18 +1595,29 @@ h1, h2, h3, h4, h5 {
     border-radius: 50%;
     background: var(--paper-ink);
 }
-.agenda-person.dp { color: var(--paper-ink-dim); }
-.agenda-person.dp .dot { background: transparent; border: 1.5px solid var(--patina); }
+.agenda-person.dp {
+    color: var(--paper-ink-dim);
+}
+.agenda-person.dp .dot {
+    background: transparent;
+    border: 1.5px solid var(--patina);
+}
 .agenda-person .tag {
     margin-left: auto;
     font-family: var(--font-mono);
     font-size: 9px;
-    letter-spacing: .09em;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
     color: var(--paper-ink-dim);
 }
-.agenda-person.lead .tag { color: var(--goldleaf-dk); font-weight: 700; }
-.agenda-person a { color: var(--goldleaf-dk); font-weight: 600; }
+.agenda-person.lead .tag {
+    color: var(--goldleaf-dk);
+    font-weight: 700;
+}
+.agenda-person a {
+    color: var(--goldleaf-dk);
+    font-weight: 600;
+}
 
 .agenda-gap {
     display: flex;
@@ -1232,7 +1627,7 @@ h1, h2, h3, h4, h5 {
     min-height: 38px;
     font-family: var(--font-mono);
     font-size: 10.5px;
-    letter-spacing: .09em;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
     color: var(--cinnabar);
     border-bottom: 1.5px solid var(--cinnabar);
@@ -1249,10 +1644,12 @@ h1, h2, h3, h4, h5 {
     display: none;
     place-items: center;
     padding: var(--gap);
-    background: rgba(12, 9, 7, .82);
+    background: rgba(12, 9, 7, 0.82);
     backdrop-filter: blur(6px);
 }
-.solve-overlay.active { display: grid; }
+.solve-overlay.active {
+    display: grid;
+}
 
 .solve-box {
     width: min(460px, 100%);
@@ -1266,11 +1663,14 @@ h1, h2, h3, h4, h5 {
 
 .solve-box h4 {
     font-size: 17px;
-    font-variation-settings: 'wdth' 88;
+    font-variation-settings: "wdth" 88;
     margin-bottom: 8px;
 }
 
-.solve-box p { font-size: 12.5px; color: var(--ink-dim); }
+.solve-box p {
+    font-size: 12.5px;
+    color: var(--ink-dim);
+}
 
 .solve-steps {
     margin-top: 18px;
@@ -1288,11 +1688,23 @@ h1, h2, h3, h4, h5 {
     color: var(--ink-faint);
     transition: color var(--speed) var(--ease);
 }
-.solve-step i { flex: 0 0 14px; font-size: 11px; text-align: center; }
-.solve-step.done { color: var(--ink); }
-.solve-step.done i { color: var(--patina-lt); }
-.solve-step.busy { color: var(--ink-hi); }
-.solve-step.busy i { color: var(--goldleaf); }
+.solve-step i {
+    flex: 0 0 14px;
+    font-size: 11px;
+    text-align: center;
+}
+.solve-step.done {
+    color: var(--ink);
+}
+.solve-step.done i {
+    color: var(--patina-lt);
+}
+.solve-step.busy {
+    color: var(--ink-hi);
+}
+.solve-step.busy i {
+    color: var(--goldleaf);
+}
 
 .solve-elapsed {
     margin-top: 18px;
@@ -1300,11 +1712,13 @@ h1, h2, h3, h4, h5 {
     border-top: 1px solid var(--rule);
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: .09em;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
     color: var(--ink-dim);
 }
-.solve-elapsed b { color: var(--goldleaf); }
+.solve-elapsed b {
+    color: var(--goldleaf);
+}
 
 /* ==========================================================================
    12. KPI
@@ -1347,19 +1761,21 @@ h1, h2, h3, h4, h5 {
     border-radius: var(--radius-sm);
 }
 
-.kpi-data { min-width: 0; }
+.kpi-data {
+    min-width: 0;
+}
 
 .kpi-data h3 {
     font-size: 27px;
     font-weight: 700;
-    letter-spacing: -.02em;
+    letter-spacing: -0.02em;
     color: var(--ink-hi);
 }
 
 .kpi-data p {
     font-size: 11px;
     font-weight: 500;
-    letter-spacing: .07em;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
     color: var(--ink-dim);
     margin-top: 2px;
@@ -1370,10 +1786,15 @@ h1, h2, h3, h4, h5 {
    Mật độ mực: càng nhiều người rảnh, xanh gỉ càng đậm.
    ========================================================================== */
 
-.heatmap-card { padding: 0; overflow: hidden; }
+.heatmap-card {
+    padding: 0;
+    overflow: hidden;
+}
 
 .heatmap-card .card-header,
-.table-card .card-header { margin: 0; }
+.table-card .card-header {
+    margin: 0;
+}
 
 .heatmap-header {
     display: flex;
@@ -1391,7 +1812,10 @@ h1, h2, h3, h4, h5 {
     color: var(--ink-dim);
 }
 
-.legend-scale { display: flex; gap: 3px; }
+.legend-scale {
+    display: flex;
+    gap: 3px;
+}
 
 .heat-box {
     display: grid;
@@ -1406,7 +1830,10 @@ h1, h2, h3, h4, h5 {
     border-radius: var(--radius-sm);
 }
 
-.heatmap-table-container { overflow-x: auto; background: var(--eggshell); }
+.heatmap-table-container {
+    overflow-x: auto;
+    background: var(--eggshell);
+}
 
 .heatmap-table {
     width: 100%;
@@ -1420,7 +1847,7 @@ h1, h2, h3, h4, h5 {
     font-family: var(--font-mono);
     font-size: 10.5px;
     font-weight: 700;
-    letter-spacing: .08em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     text-align: center;
     color: var(--paper-ink);
@@ -1429,7 +1856,9 @@ h1, h2, h3, h4, h5 {
     border-right: 1px solid var(--paper-rule);
     white-space: nowrap;
 }
-.heatmap-table th:last-child { border-right: 0; }
+.heatmap-table th:last-child {
+    border-right: 0;
+}
 
 .heatmap-table td {
     padding: 9px 8px;
@@ -1438,10 +1867,15 @@ h1, h2, h3, h4, h5 {
     border-bottom: 1px solid var(--paper-rule);
     color: var(--paper-ink);
 }
-.heatmap-table td:last-child { border-right: 0; }
+.heatmap-table td:last-child {
+    border-right: 0;
+}
 
 /* Cột nhãn thứ */
-.heatmap-table .heat-day-col { width: 124px; text-align: left; }
+.heatmap-table .heat-day-col {
+    width: 124px;
+    text-align: left;
+}
 
 .heatmap-table tbody td:first-child {
     font-family: var(--font-mono);
@@ -1453,24 +1887,52 @@ h1, h2, h3, h4, h5 {
     background: var(--eggshell-2);
 }
 
-.heat-cell-val { font-size: 15px; font-weight: 700; line-height: 1.1; }
-.heat-cell-pct { font-size: 9.5px; color: var(--paper-ink-dim); margin-top: 1px; }
+.heat-cell-val {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.1;
+}
+.heat-cell-pct {
+    font-size: 9.5px;
+    color: var(--paper-ink-dim);
+    margin-top: 1px;
+}
 
 /* Bậc mật độ mực xanh gỉ */
 .heatmap-table td.lvl-0,
-.heat-box.lvl-0 { background: var(--eggshell); color: var(--cinnabar); }
-.heatmap-table td.lvl-1, .heat-box.lvl-1 { background: rgba(63, 107, 95, .13); }
-.heatmap-table td.lvl-2, .heat-box.lvl-2 { background: rgba(63, 107, 95, .28); }
-.heatmap-table td.lvl-3, .heat-box.lvl-3 { background: rgba(63, 107, 95, .46); }
-.heatmap-table td.lvl-4, .heat-box.lvl-4 { background: rgba(63, 107, 95, .68); }
+.heat-box.lvl-0 {
+    background: var(--eggshell);
+    color: var(--cinnabar);
+}
+.heatmap-table td.lvl-1,
+.heat-box.lvl-1 {
+    background: rgba(63, 107, 95, 0.13);
+}
+.heatmap-table td.lvl-2,
+.heat-box.lvl-2 {
+    background: rgba(63, 107, 95, 0.28);
+}
+.heatmap-table td.lvl-3,
+.heat-box.lvl-3 {
+    background: rgba(63, 107, 95, 0.46);
+}
+.heatmap-table td.lvl-4,
+.heat-box.lvl-4 {
+    background: rgba(63, 107, 95, 0.68);
+}
 
-.heatmap-table td.lvl-0 .heat-cell-pct { color: var(--cinnabar); }
+.heatmap-table td.lvl-0 .heat-cell-pct {
+    color: var(--cinnabar);
+}
 
 /* ==========================================================================
    14. DATA TABLES  (Giao diện Bảng Tối Đậm Nét, Tương Phản Cao & Dễ Nhìn)
    ========================================================================== */
 
-.table-card { padding: 0; overflow: hidden; }
+.table-card {
+    padding: 0;
+    overflow: hidden;
+}
 
 .table-responsive {
     overflow-x: auto;
@@ -1498,7 +1960,7 @@ h1, h2, h3, h4, h5 {
     font-family: var(--font-body);
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: .06em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     text-align: left;
     white-space: nowrap;
@@ -1516,29 +1978,70 @@ h1, h2, h3, h4, h5 {
 }
 
 .data-table tbody tr:hover,
-.risk-table tbody tr:hover { background: var(--lacquer-4); }
+.risk-table tbody tr:hover {
+    background: var(--lacquer-4);
+}
 
 .data-table tbody tr:last-child td,
-.risk-table tbody tr:last-child td { border-bottom: 0; }
+.risk-table tbody tr:last-child td {
+    border-bottom: 0;
+}
 
 /* Mã, SĐT, số liệu — chữ số đều cột */
 .data-table td:first-child,
-.risk-table td:first-child { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--ink-hi); }
+.risk-table td:first-child {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-hi);
+}
 
-.outside-table { min-width: 620px; }
-.outside-table-box { max-height: 440px; overflow-y: auto; border-radius: var(--radius-sm); }
+.outside-table {
+    min-width: 620px;
+}
+.outside-table-box {
+    max-height: 440px;
+    overflow-y: auto;
+    border-radius: var(--radius-sm);
+}
 
-.risk-table { min-width: 1050px; }
-.risk-table td { font-size: 12.5px; line-height: 1.5; }
+.risk-table {
+    min-width: 1050px;
+}
+.risk-table td {
+    font-size: 12.5px;
+    line-height: 1.5;
+}
 
 /* --- Nhãn nghĩa cho nội dung do JS dựng -------------------------------- */
-.mk-lead { font-weight: 700; color: var(--goldleaf); }      /* trưởng ca / trực chính */
-.mk-dp   { font-weight: 700; color: var(--patina-lt); }     /* dự phòng */
-.mk-ok   { font-weight: 600; color: var(--patina-lt); }     /* đã xác nhận */
-.mk-warn { font-weight: 700; color: var(--goldleaf); }      /* cần để ý */
-.mk-bad  { font-weight: 700; color: var(--cinnabar-lt); }   /* thiếu người / rủi ro cao */
-.mk-none { color: var(--ink-dim); }                         /* không có */
-.mk-num  { font-family: var(--font-mono); font-weight: 600; color: var(--ink-hi); }
+.mk-lead {
+    font-weight: 700;
+    color: var(--goldleaf);
+} /* trưởng ca / trực chính */
+.mk-dp {
+    font-weight: 700;
+    color: var(--patina-lt);
+} /* dự phòng */
+.mk-ok {
+    font-weight: 600;
+    color: var(--patina-lt);
+} /* đã xác nhận */
+.mk-warn {
+    font-weight: 700;
+    color: var(--goldleaf);
+} /* cần để ý */
+.mk-bad {
+    font-weight: 700;
+    color: var(--cinnabar-lt);
+} /* thiếu người / rủi ro cao */
+.mk-none {
+    color: var(--ink-dim);
+} /* không có */
+.mk-num {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--ink-hi);
+}
 
 /* Bảng thống kê sự cố & điểm danh */
 .incident-kpi-summary {
@@ -1562,7 +2065,7 @@ h1, h2, h3, h4, h5 {
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: .06em;
+    letter-spacing: 0.06em;
     color: var(--ink-dim);
 }
 
@@ -1571,9 +2074,15 @@ h1, h2, h3, h4, h5 {
     font-family: var(--font-mono);
     font-weight: 700;
 }
-.inc-val.warn { color: var(--goldleaf); }
-.inc-val.danger { color: var(--cinnabar-lt); }
-.inc-val.ok { color: var(--patina-lt); }
+.inc-val.warn {
+    color: var(--goldleaf);
+}
+.inc-val.danger {
+    color: var(--cinnabar-lt);
+}
+.inc-val.ok {
+    color: var(--patina-lt);
+}
 
 /* Dòng trống của bảng */
 .table-empty {
@@ -1591,7 +2100,9 @@ h1, h2, h3, h4, h5 {
     color: var(--ink-dim);
 }
 
-.cell-center { text-align: center; }
+.cell-center {
+    text-align: center;
+}
 
 /* Nhãn mã ca dùng chung ở nhiều nơi */
 .shift-id-tag {
@@ -1600,7 +2111,7 @@ h1, h2, h3, h4, h5 {
     font-family: var(--font-mono);
     font-size: 11.5px;
     font-weight: 600;
-    letter-spacing: .03em;
+    letter-spacing: 0.03em;
     color: var(--ink-hi);
     background: var(--lacquer-4);
     border: 1px solid var(--rule);
@@ -1623,21 +2134,37 @@ h1, h2, h3, h4, h5 {
     background: var(--lacquer-3);
 }
 
-.audit-summary-banner.pass { border-left-color: var(--patina); }
-.audit-summary-banner.fail { border-left-color: var(--cinnabar); }
+.audit-summary-banner.pass {
+    border-left-color: var(--patina);
+}
+.audit-summary-banner.fail {
+    border-left-color: var(--cinnabar);
+}
 
-.banner-icon { flex: 0 0 auto; font-size: 24px; color: var(--ink-dim); }
-.audit-summary-banner.pass .banner-icon { color: var(--patina-lt); }
-.audit-summary-banner.fail .banner-icon { color: var(--cinnabar-lt); }
+.banner-icon {
+    flex: 0 0 auto;
+    font-size: 24px;
+    color: var(--ink-dim);
+}
+.audit-summary-banner.pass .banner-icon {
+    color: var(--patina-lt);
+}
+.audit-summary-banner.fail .banner-icon {
+    color: var(--cinnabar-lt);
+}
 
 .banner-text h4 {
     font-size: 13.5px;
     font-family: var(--font-body);
     font-weight: 700;
-    letter-spacing: .02em;
+    letter-spacing: 0.02em;
     color: var(--ink-hi);
 }
-.banner-text p { font-size: 12px; color: var(--ink-dim); margin-top: 4px; }
+.banner-text p {
+    font-size: 12px;
+    color: var(--ink-dim);
+    margin-top: 4px;
+}
 
 .audit-checklist-grid {
     display: grid;
@@ -1656,9 +2183,17 @@ h1, h2, h3, h4, h5 {
     border-radius: var(--radius);
 }
 
-.audit-status-icon { flex: 0 0 auto; font-size: 17px; margin-top: 1px; }
-.audit-status-icon.pass { color: var(--patina-lt); }
-.audit-status-icon.fail { color: var(--cinnabar-lt); }
+.audit-status-icon {
+    flex: 0 0 auto;
+    font-size: 17px;
+    margin-top: 1px;
+}
+.audit-status-icon.pass {
+    color: var(--patina-lt);
+}
+.audit-status-icon.fail {
+    color: var(--cinnabar-lt);
+}
 
 .audit-info h5 {
     font-size: 12.5px;
@@ -1667,7 +2202,12 @@ h1, h2, h3, h4, h5 {
     color: var(--ink-hi);
     line-height: 1.35;
 }
-.audit-info p { font-size: 11.5px; color: var(--ink-dim); margin-top: 5px; line-height: 1.5; }
+.audit-info p {
+    font-size: 11.5px;
+    color: var(--ink-dim);
+    margin-top: 5px;
+    line-height: 1.5;
+}
 
 /* ==========================================================================
    16. CA VẮNG & SỰ CỐ
@@ -1692,11 +2232,25 @@ h1, h2, h3, h4, h5 {
     color: var(--ink);
     background: var(--lacquer-3);
 }
-.status-pill i { font-size: 10.5px; }
-.status-present  { border-color: var(--patina);   color: var(--patina-lt); }
-.status-late     { border-color: var(--goldleaf); color: var(--goldleaf); }
-.status-leave    { border-color: var(--ink-faint); color: var(--ink-dim); }
-.status-emergency{ border-color: var(--cinnabar); color: var(--cinnabar-lt); }
+.status-pill i {
+    font-size: 10.5px;
+}
+.status-present {
+    border-color: var(--patina);
+    color: var(--patina-lt);
+}
+.status-late {
+    border-color: var(--goldleaf);
+    color: var(--goldleaf);
+}
+.status-leave {
+    border-color: var(--ink-faint);
+    color: var(--ink-dim);
+}
+.status-emergency {
+    border-color: var(--cinnabar);
+    color: var(--cinnabar-lt);
+}
 
 .incident-form-box {
     display: flex;
@@ -1713,13 +2267,18 @@ h1, h2, h3, h4, h5 {
     align-items: center;
     gap: 9px;
     font-size: 13px;
-    font-variation-settings: 'wdth' 90;
+    font-variation-settings: "wdth" 90;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--rule);
 }
-.incident-form-box h4 i { font-size: 12px; color: var(--goldleaf); }
+.incident-form-box h4 i {
+    font-size: 12px;
+    color: var(--goldleaf);
+}
 
-#replacementHint { font-size: 11.5px; }
+#replacementHint {
+    font-size: 11.5px;
+}
 
 .swap-msg {
     display: none;
@@ -1730,16 +2289,18 @@ h1, h2, h3, h4, h5 {
     background: var(--lacquer-2);
     color: var(--ink);
 }
-.swap-msg:not(:empty) { display: block; }
+.swap-msg:not(:empty) {
+    display: block;
+}
 .swap-msg.success {
     border-color: var(--patina);
-    background: rgba(63, 107, 95, .16);
-    color: #DCEFE7;
+    background: rgba(63, 107, 95, 0.16);
+    color: #dcefe7;
 }
 .swap-msg.error {
     border-color: var(--cinnabar);
-    background: rgba(183, 51, 42, .16);
-    color: #F6D9D4;
+    background: rgba(183, 51, 42, 0.16);
+    color: #f6d9d4;
 }
 
 .incident-logs-container {
@@ -1769,10 +2330,13 @@ h1, h2, h3, h4, h5 {
     font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: .05em;
+    letter-spacing: 0.05em;
     color: var(--ink-hi);
 }
-.incident-card strong { color: var(--ink-hi); font-weight: 600; }
+.incident-card strong {
+    color: var(--ink-hi);
+    font-weight: 600;
+}
 
 .incident-card-meta {
     margin-top: 5px;
@@ -1802,12 +2366,16 @@ h1, h2, h3, h4, h5 {
     color: var(--ink-dim);
     border-radius: var(--radius-sm);
     box-shadow: inset 0 -2px 0 transparent;
-    transition: color var(--speed) var(--ease),
-                background var(--speed) var(--ease),
-                box-shadow var(--speed) var(--ease);
+    transition:
+        color var(--speed) var(--ease),
+        background var(--speed) var(--ease),
+        box-shadow var(--speed) var(--ease);
 }
 .p-nav-btn:hover,
-.p-tab-btn:hover { background: var(--lacquer-3); color: var(--ink-hi); }
+.p-tab-btn:hover {
+    background: var(--lacquer-3);
+    color: var(--ink-hi);
+}
 .p-nav-btn.active,
 .p-tab-btn.active {
     color: var(--ink-hi);
@@ -1817,7 +2385,7 @@ h1, h2, h3, h4, h5 {
 
 .protocol-section > h3 {
     font-size: 17px;
-    font-variation-settings: 'wdth' 88;
+    font-variation-settings: "wdth" 88;
     padding-bottom: 13px;
     margin-bottom: 15px;
     border-bottom: 1px solid var(--rule);
@@ -1840,13 +2408,31 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 6px;
 }
 
-.protocol-card p { font-size: 12.5px; color: var(--ink); line-height: 1.6; }
-.protocol-card p + p { margin-top: 6px; }
-.protocol-card strong { color: var(--ink-hi); font-weight: 600; }
+.protocol-card p {
+    font-size: 12.5px;
+    color: var(--ink);
+    line-height: 1.6;
+}
+.protocol-card p + p {
+    margin-top: 6px;
+}
+.protocol-card strong {
+    color: var(--ink-hi);
+    font-weight: 600;
+}
 .protocol-card ul,
-.protocol-steps { margin: 7px 0 0 18px; color: var(--ink); }
-.protocol-card li { font-size: 12.5px; line-height: 1.6; margin-bottom: 3px; }
-.protocol-card ::marker { color: var(--goldleaf); }
+.protocol-steps {
+    margin: 7px 0 0 18px;
+    color: var(--ink);
+}
+.protocol-card li {
+    font-size: 12.5px;
+    line-height: 1.6;
+    margin-bottom: 3px;
+}
+.protocol-card ::marker {
+    color: var(--goldleaf);
+}
 
 /* ==========================================================================
    18. MODALS
@@ -1861,10 +2447,12 @@ h1, h2, h3, h4, h5 {
     justify-content: center;
     padding: var(--gap);
     overflow-y: auto;
-    background: rgba(12, 9, 7, .8);
+    background: rgba(12, 9, 7, 0.8);
     backdrop-filter: blur(5px);
 }
-.modal-backdrop.active { display: flex; }
+.modal-backdrop.active {
+    display: flex;
+}
 
 .modal-box {
     width: min(660px, 100%);
@@ -1877,11 +2465,19 @@ h1, h2, h3, h4, h5 {
     animation: modal-in 180ms var(--ease);
 }
 
-.modal-xl { width: min(1240px, 100%); }
+.modal-xl {
+    width: min(1240px, 100%);
+}
 
 @keyframes modal-in {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: none; }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
 }
 
 .modal-header {
@@ -1898,10 +2494,13 @@ h1, h2, h3, h4, h5 {
     align-items: center;
     gap: 10px;
     font-size: 14.5px;
-    font-variation-settings: 'wdth' 90;
+    font-variation-settings: "wdth" 90;
     min-width: 0;
 }
-.modal-header h3 i { font-size: 13px; color: var(--goldleaf); }
+.modal-header h3 i {
+    font-size: 13px;
+    color: var(--goldleaf);
+}
 
 .modal-close {
     flex: 0 0 auto;
@@ -1914,7 +2513,9 @@ h1, h2, h3, h4, h5 {
     color: var(--ink-dim);
     border: 1px solid transparent;
     border-radius: var(--radius-sm);
-    transition: color var(--speed) var(--ease), background var(--speed) var(--ease);
+    transition:
+        color var(--speed) var(--ease),
+        background var(--speed) var(--ease);
 }
 .modal-close:hover {
     color: var(--ink-hi);
@@ -1922,7 +2523,9 @@ h1, h2, h3, h4, h5 {
     border-color: var(--rule);
 }
 
-.modal-body { padding: 20px; }
+.modal-body {
+    padding: 20px;
+}
 
 .modal-footer {
     display: flex;
@@ -1941,13 +2544,34 @@ h1, h2, h3, h4, h5 {
     border-radius: var(--radius-sm);
     margin-bottom: 14px;
 }
-.sms-loc { font-size: 13px; color: var(--goldleaf); font-weight: 600; display: flex; align-items: center; gap: 6px; }
-.sms-loc i { font-size: 12px; }
-.sms-time { color: var(--ink-hi); font-weight: 500; }
-.sms-meta { font-size: 11.5px; color: var(--ink-dim); margin-top: 2px; }
+.sms-loc {
+    font-size: 13px;
+    color: var(--goldleaf);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.sms-loc i {
+    font-size: 12px;
+}
+.sms-time {
+    color: var(--ink-hi);
+    font-weight: 500;
+}
+.sms-meta {
+    font-size: 11.5px;
+    color: var(--ink-dim);
+    margin-top: 2px;
+}
 
 /* Danh sách nhân sự trong modal sửa ca */
-.member-edit-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.member-edit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+}
 
 .member-edit-row {
     display: flex;
@@ -1959,7 +2583,9 @@ h1, h2, h3, h4, h5 {
     background: var(--lacquer-3);
     border: 1px solid var(--rule);
     border-radius: var(--radius-sm);
-    transition: background 0.15s ease, border-color 0.15s ease;
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease;
 }
 .member-edit-row:hover {
     background: var(--lacquer-4);
@@ -1970,7 +2596,10 @@ h1, h2, h3, h4, h5 {
     background: rgba(139, 92, 246, 0.05);
 }
 
-.mer-who { flex: 1 1 auto; min-width: 0; }
+.mer-who {
+    flex: 1 1 auto;
+    min-width: 0;
+}
 .mer-name-line {
     display: flex;
     align-items: center;
@@ -2015,7 +2644,10 @@ h1, h2, h3, h4, h5 {
     align-items: center;
     gap: 5px;
 }
-.mer-meta i { font-size: 10px; opacity: 0.7; }
+.mer-meta i {
+    font-size: 10px;
+    opacity: 0.7;
+}
 
 .mer-controls {
     display: flex;
@@ -2051,9 +2683,15 @@ h1, h2, h3, h4, h5 {
     border-radius: 4px;
 }
 
-.mb-16 { margin-bottom: 16px; }
+.mb-16 {
+    margin-bottom: 16px;
+}
 
-.upload-options { display: flex; flex-direction: column; gap: var(--gap-sm); }
+.upload-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+}
 
 .upload-opt-card {
     padding: 16px 17px;
@@ -2070,14 +2708,31 @@ h1, h2, h3, h4, h5 {
     font-weight: 700;
     color: var(--ink-hi);
 }
-.upload-opt-card h4 i { color: var(--goldleaf); font-size: 12px; }
-.upload-opt-card > p { font-size: 12px; color: var(--ink-dim); margin-top: 6px; }
+.upload-opt-card h4 i {
+    color: var(--goldleaf);
+    font-size: 12px;
+}
+.upload-opt-card > p {
+    font-size: 12px;
+    color: var(--ink-dim);
+    margin-top: 6px;
+}
 .upload-opt-card > .form-group,
 .upload-opt-card > .custom-file-input,
-.upload-opt-card > .btn-primary { margin-top: 10px; }
+.upload-opt-card > .btn-primary {
+    margin-top: 10px;
+}
 
-.modal-header-actions { display: flex; align-items: center; gap: 12px; }
-.row-end { display: flex; justify-content: flex-end; margin-top: 16px; }
+.modal-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.row-end {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
 
 .preview-tabs-nav {
     display: flex;
@@ -2087,9 +2742,16 @@ h1, h2, h3, h4, h5 {
     border-bottom: 1px solid var(--rule);
 }
 
-.preview-modal-body { padding: 0; }
-.preview-table-wrap { max-height: min(66vh, 640px); overflow: auto; }
-.preview-table-wrap .data-table { min-width: 1100px; }
+.preview-modal-body {
+    padding: 0;
+}
+.preview-table-wrap {
+    max-height: min(66vh, 640px);
+    overflow: auto;
+}
+.preview-table-wrap .data-table {
+    min-width: 1100px;
+}
 
 /* ==========================================================================
    19. THẺ THÀNH VIÊN & NHÃN VAI TRÒ  (dùng trong modal, agenda)
@@ -2107,7 +2769,9 @@ h1, h2, h3, h4, h5 {
     border-radius: var(--radius-sm);
     margin-bottom: 4px;
 }
-.member-chip.leader { border-color: var(--goldleaf); }
+.member-chip.leader {
+    border-color: var(--goldleaf);
+}
 
 .member-name {
     display: flex;
@@ -2116,20 +2780,29 @@ h1, h2, h3, h4, h5 {
     min-width: 0;
     color: var(--ink-hi);
 }
-.member-name > i { font-size: 10px; color: var(--ink-faint); }
+.member-name > i {
+    font-size: 10px;
+    color: var(--ink-faint);
+}
 
 .role-badge {
     padding: 1px 6px;
     font-family: var(--font-mono);
     font-size: 8.5px;
     font-weight: 700;
-    letter-spacing: .08em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     border-radius: var(--radius-sm);
     white-space: nowrap;
 }
-.role-badge.chinh { background: var(--goldleaf); color: #1A1207; }
-.role-badge.dp { border: 1px solid var(--patina); color: var(--patina-lt); }
+.role-badge.chinh {
+    background: var(--goldleaf);
+    color: #1a1207;
+}
+.role-badge.dp {
+    border: 1px solid var(--patina);
+    color: var(--patina-lt);
+}
 
 /* Ban không phân biệt bằng màu — chính chữ đã nói rõ ban nào. Năm class
    .dept-* cố tình giống nhau để tránh cầu vồng vô nghĩa. */
@@ -2143,7 +2816,7 @@ h1, h2, h3, h4, h5 {
     padding: 1px 6px;
     font-size: 9.5px;
     font-weight: 600;
-    letter-spacing: .06em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-dim);
     border: 1px solid var(--rule);
@@ -2164,26 +2837,45 @@ h1, h2, h3, h4, h5 {
 
 /* --- Tablet: rail thu về còn icon --------------------------------------- */
 @media (max-width: 1023px) and (min-width: 768px) {
-    :root { --rail-w: 68px; --gap-lg: 20px; }
+    :root {
+        --rail-w: 68px;
+        --gap-lg: 20px;
+    }
 
-    .brand-box { padding: 16px 0; justify-content: center; }
-    .brand-text { display: none; }
+    .brand-box {
+        padding: 16px 0;
+        justify-content: center;
+    }
+    .brand-text {
+        display: none;
+    }
 
-    .nav-menu { padding: 12px 8px; }
+    .nav-menu {
+        padding: 12px 8px;
+    }
 
     .nav-item {
         justify-content: center;
         padding: 12px 0;
         min-height: 48px;
     }
-    .nav-item span { display: none; }
-    .nav-item i { flex: 0 0 auto; font-size: 16px; }
+    .nav-item span {
+        display: none;
+    }
+    .nav-item i {
+        flex: 0 0 auto;
+        font-size: 16px;
+    }
 
     /* Không có chỗ cho nhãn, nên phải có tooltip gốc của trình duyệt.
        app.js gán title từ .nav-full lúc khởi tạo. */
 
-    .sidebar-footer { padding: 10px 8px; }
-    .export-card { display: none; }
+    .sidebar-footer {
+        padding: 10px 8px;
+    }
+    .export-card {
+        display: none;
+    }
 
     /* Nút xuất/xem trước co lại thành icon, giữ vùng chạm 44px */
     .btn-export,
@@ -2194,18 +2886,30 @@ h1, h2, h3, h4, h5 {
         font-size: 0;
     }
     .btn-export i,
-    .btn-preview i { font-size: 15px; }
+    .btn-preview i {
+        font-size: 15px;
+    }
 
-    .duty-board { grid-template-columns: 58px repeat(7, minmax(120px, 1fr)); min-width: 900px; }
+    .duty-board {
+        grid-template-columns: 58px repeat(7, minmax(120px, 1fr));
+        min-width: 900px;
+    }
 }
 
 /* --- Điện thoại --------------------------------------------------------- */
 @media (max-width: 767px) {
-    :root { --gap: 14px; --gap-lg: 14px; }
+    :root {
+        --gap: 14px;
+        --gap-lg: 14px;
+    }
 
-    body { font-size: 14px; }
+    body {
+        font-size: 14px;
+    }
 
-    .app-layout { grid-template-columns: minmax(0, 1fr); }
+    .app-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
 
     /* Rail → tab bar đáy: nằm trong tầm ngón cái, đỡ một lần bấm so với drawer.
        z-index cao hơn bảng "Thêm" để thanh đáy không bị làm mờ khi mở bảng —
@@ -2219,13 +2923,15 @@ h1, h2, h3, h4, h5 {
         flex-direction: row;
         border-right: 0;
         border-top: 1px solid var(--rule);
-        background: rgba(31, 24, 19, .97);
+        background: rgba(31, 24, 19, 0.97);
         backdrop-filter: blur(16px);
         padding-bottom: env(safe-area-inset-bottom, 0);
     }
 
     .brand-box,
-    .sidebar-footer { display: none; }
+    .sidebar-footer {
+        display: none;
+    }
 
     .nav-menu {
         flex: 1 1 auto;
@@ -2247,20 +2953,27 @@ h1, h2, h3, h4, h5 {
         border-radius: 0;
         box-shadow: inset 0 2px 0 transparent;
     }
-    .nav-item i { flex: 0 0 auto; font-size: 17px; }
-    .nav-item .nav-full { display: none; }
+    .nav-item i {
+        flex: 0 0 auto;
+        font-size: 17px;
+    }
+    .nav-item .nav-full {
+        display: none;
+    }
     .nav-item .nav-short {
         display: block;
         font-size: 9.5px;
         font-weight: 600;
-        letter-spacing: .01em;
+        letter-spacing: 0.01em;
         line-height: 1.15;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         max-width: 100%;
     }
-    .nav-item:hover { background: transparent; }
+    .nav-item:hover {
+        background: transparent;
+    }
     .nav-item.active {
         background: transparent;
         box-shadow: inset 0 2px 0 var(--goldleaf);
@@ -2271,15 +2984,29 @@ h1, h2, h3, h4, h5 {
        xử lý ca vắng đứng trước cấu hình solver. */
     .nav-menu .nav-item[data-tab="tab-ca-ngoai"],
     .nav-menu .nav-item[data-tab="tab-audit"],
-    .nav-menu .nav-item[data-tab="tab-protocols"] { display: none; }
+    .nav-menu .nav-item[data-tab="tab-protocols"] {
+        display: none;
+    }
 
-    .nav-menu .nav-item[data-tab="tab-schedule"]    { order: 1; }
-    .nav-menu .nav-item[data-tab="tab-contingency"] { order: 2; }
-    .nav-menu .nav-item[data-tab="tab-analytics"]   { order: 3; }
-    .nav-menu .nav-item[data-tab="tab-optimizer"]   { order: 4; }
-    .nav-menu .more-trigger                          { order: 5; }
+    .nav-menu .nav-item[data-tab="tab-schedule"] {
+        order: 1;
+    }
+    .nav-menu .nav-item[data-tab="tab-contingency"] {
+        order: 2;
+    }
+    .nav-menu .nav-item[data-tab="tab-analytics"] {
+        order: 3;
+    }
+    .nav-menu .nav-item[data-tab="tab-optimizer"] {
+        order: 4;
+    }
+    .nav-menu .more-trigger {
+        order: 5;
+    }
 
-    .main-content { padding-bottom: 76px; }
+    .main-content {
+        padding-bottom: 76px;
+    }
 
     /* Topbar gọn lại: tiêu đề nhỏ, hai nút thành icon vuông */
     .topbar {
@@ -2287,11 +3014,21 @@ h1, h2, h3, h4, h5 {
         gap: 10px;
         padding: 12px var(--gap);
     }
-    .topbar-left { flex: 1 1 auto; }
-    .topbar-left h1 { font-size: 16px; line-height: 1.25; }
-    .topbar-left .subtitle { display: none; }
+    .topbar-left {
+        flex: 1 1 auto;
+    }
+    .topbar-left h1 {
+        font-size: 16px;
+        line-height: 1.25;
+    }
+    .topbar-left .subtitle {
+        display: none;
+    }
 
-    .topbar-right { flex: 0 0 auto; gap: 7px; }
+    .topbar-right {
+        flex: 0 0 auto;
+        gap: 7px;
+    }
     .btn-upload-trigger,
     .btn-quick-run {
         width: 44px;
@@ -2301,31 +3038,67 @@ h1, h2, h3, h4, h5 {
         min-height: 44px;
     }
     .btn-upload-trigger i,
-    .btn-quick-run i { font-size: 15px; }
+    .btn-quick-run i {
+        font-size: 15px;
+    }
 
     /* Bảng lưới 7×5 không đọc được ở 375px → dùng agenda theo ngày */
-    .board { display: none; }
-    .agenda { display: block; }
+    .board {
+        display: none;
+    }
+    .agenda {
+        display: block;
+    }
 
-    .filter-bar { padding: 12px; gap: 12px; }
+    .filter-bar {
+        padding: 12px;
+        gap: 12px;
+    }
     .filter-bar .filter-group,
-    .search-box { flex: 1 1 100%; width: 100%; }
-    .btn-group { width: 100%; }
-    .filter-btn { flex: 1 1 0; padding: 9px 6px; font-size: 11.5px; }
+    .search-box {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+    .btn-group {
+        width: 100%;
+    }
+    .filter-btn {
+        flex: 1 1 0;
+        padding: 9px 6px;
+        font-size: 11.5px;
+    }
 
-    .glass-card { padding: var(--gap); }
+    .glass-card {
+        padding: var(--gap);
+    }
     .card-header {
         margin: calc(var(--gap) * -1) calc(var(--gap) * -1) var(--gap);
         padding: 13px var(--gap);
     }
-    .card-header h3 { font-size: 13.5px; }
+    .card-header h3 {
+        font-size: 13.5px;
+    }
 
-    .kpi-card { padding: 13px 14px; gap: 11px; }
-    .kpi-data h3 { font-size: 22px; }
-    .kpi-icon { width: 34px; height: 34px; font-size: 13px; }
+    .kpi-card {
+        padding: 13px 14px;
+        gap: 11px;
+    }
+    .kpi-data h3 {
+        font-size: 22px;
+    }
+    .kpi-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
 
-    .status-handling-box { gap: 6px; }
-    .status-pill { padding: 8px 11px; font-size: 11px; }
+    .status-handling-box {
+        gap: 6px;
+    }
+    .status-pill {
+        padding: 8px 11px;
+        font-size: 11px;
+    }
 
     .protocols-nav {
         margin: calc(var(--gap) * -1) calc(var(--gap) * -1) var(--gap);
@@ -2335,8 +3108,13 @@ h1, h2, h3, h4, h5 {
         flex-wrap: nowrap;
         scrollbar-width: none;
     }
-    .protocols-nav::-webkit-scrollbar { display: none; }
-    .p-nav-btn { flex: 0 0 auto; white-space: nowrap; }
+    .protocols-nav::-webkit-scrollbar {
+        display: none;
+    }
+    .p-nav-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
 
     .preview-tabs-nav {
         padding: 8px 12px;
@@ -2344,10 +3122,17 @@ h1, h2, h3, h4, h5 {
         overflow-x: auto;
         scrollbar-width: none;
     }
-    .preview-tabs-nav::-webkit-scrollbar { display: none; }
-    .p-tab-btn { flex: 0 0 auto; white-space: nowrap; }
+    .preview-tabs-nav::-webkit-scrollbar {
+        display: none;
+    }
+    .p-tab-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
 
-    .modal-backdrop { padding: 0; }
+    .modal-backdrop {
+        padding: 0;
+    }
     .modal-box {
         width: 100%;
         min-height: 100%;
@@ -2355,22 +3140,40 @@ h1, h2, h3, h4, h5 {
         border: 0;
         border-radius: 0;
     }
-    .modal-header { padding: 14px var(--gap); }
-    .modal-header h3 { font-size: 13.5px; }
-    .modal-body { padding: var(--gap); }
-    .modal-footer { padding: 12px var(--gap); }
+    .modal-header {
+        padding: 14px var(--gap);
+    }
+    .modal-header h3 {
+        font-size: 13.5px;
+    }
+    .modal-body {
+        padding: var(--gap);
+    }
+    .modal-footer {
+        padding: 12px var(--gap);
+    }
     .modal-footer .btn-primary,
-    .modal-footer .btn-secondary { flex: 1 1 0; }
+    .modal-footer .btn-secondary {
+        flex: 1 1 0;
+    }
 
-    .member-edit-row { flex-wrap: wrap; }
+    .member-edit-row {
+        flex-wrap: wrap;
+    }
 
-    .solve-box { padding: 20px; }
+    .solve-box {
+        padding: 20px;
+    }
 }
 
 /* --- Rất hẹp ------------------------------------------------------------ */
 @media (max-width: 380px) {
-    .nav-item span { font-size: 8.5px; }
-    .kpi-grid { grid-template-columns: minmax(0, 1fr); }
+    .nav-item span {
+        font-size: 8.5px;
+    }
+    .kpi-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }
 
 /* ==========================================================================
@@ -2378,17 +3181,21 @@ h1, h2, h3, h4, h5 {
    Ba tab ít dùng + hai hành động xuất báo cáo.
    ========================================================================== */
 
-.more-trigger { display: none; }
+.more-trigger {
+    display: none;
+}
 
 .more-sheet {
     position: fixed;
     inset: 0;
     z-index: 70;
     display: none;
-    background: rgba(12, 9, 7, .72);
+    background: rgba(12, 9, 7, 0.72);
     backdrop-filter: blur(4px);
 }
-.more-sheet.active { display: block; }
+.more-sheet.active {
+    display: block;
+}
 
 .more-panel {
     position: absolute;
@@ -2401,15 +3208,21 @@ h1, h2, h3, h4, h5 {
 }
 
 @keyframes sheet-in {
-    from { transform: translateY(18px); opacity: 0; }
-    to   { transform: none; opacity: 1; }
+    from {
+        transform: translateY(18px);
+        opacity: 0;
+    }
+    to {
+        transform: none;
+        opacity: 1;
+    }
 }
 
 .more-panel .more-title {
     padding: 10px 12px 12px;
     font-size: 10px;
     font-weight: 600;
-    letter-spacing: .16em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-dim);
 }
@@ -2426,7 +3239,10 @@ h1, h2, h3, h4, h5 {
     border-radius: var(--radius-sm);
     box-shadow: inset 2px 0 0 transparent;
 }
-.more-panel .nav-item i { flex: 0 0 20px; font-size: 14px; }
+.more-panel .nav-item i {
+    flex: 0 0 20px;
+    font-size: 14px;
+}
 .more-panel .nav-item .nav-full {
     display: block;
     font-size: 13.5px;
@@ -2434,8 +3250,12 @@ h1, h2, h3, h4, h5 {
     letter-spacing: 0;
     white-space: normal;
 }
-.more-panel .nav-item .nav-short { display: none; }
-.more-panel .nav-item.active { box-shadow: inset 2px 0 0 var(--goldleaf); }
+.more-panel .nav-item .nav-short {
+    display: none;
+}
+.more-panel .nav-item.active {
+    box-shadow: inset 2px 0 0 var(--goldleaf);
+}
 
 .more-panel .more-actions {
     display: flex;
@@ -2444,7 +3264,10 @@ h1, h2, h3, h4, h5 {
     padding-top: 12px;
     border-top: 1px solid var(--rule);
 }
-.more-panel .more-actions > * { flex: 1 1 0; min-height: 46px; }
+.more-panel .more-actions > * {
+    flex: 1 1 0;
+    min-height: 46px;
+}
 .more-panel .more-actions .btn-export,
 .more-panel .more-actions .btn-preview {
     width: auto;
@@ -2453,10 +3276,14 @@ h1, h2, h3, h4, h5 {
     font-size: 12.5px;
 }
 .more-panel .more-actions .btn-export i,
-.more-panel .more-actions .btn-preview i { font-size: 13px; }
+.more-panel .more-actions .btn-preview i {
+    font-size: 13px;
+}
 
 @media (max-width: 767px) {
-    .more-trigger { display: flex; }
+    .more-trigger {
+        display: flex;
+    }
 }
 
 /* ==========================================================================
@@ -2464,13 +3291,32 @@ h1, h2, h3, h4, h5 {
    ========================================================================== */
 
 @media print {
-    body { background: #fff; color: #000; }
-    .sidebar, .topbar, .filter-bar, .more-sheet, .solve-overlay,
-    .modal-backdrop, .board-legend { display: none !important; }
-    .main-content { padding: 0; }
-    .tab-content { padding: 0; }
-    .board { box-shadow: none; border-color: #999; }
-    .duty-board { min-width: 0; }
+    body {
+        background: #fff;
+        color: #000;
+    }
+    .sidebar,
+    .topbar,
+    .filter-bar,
+    .more-sheet,
+    .solve-overlay,
+    .modal-backdrop,
+    .board-legend {
+        display: none !important;
+    }
+    .main-content {
+        padding: 0;
+    }
+    .tab-content {
+        padding: 0;
+    }
+    .board {
+        box-shadow: none;
+        border-color: #999;
+    }
+    .duty-board {
+        min-width: 0;
+    }
 }
 
 /* ==========================================================================
@@ -2487,7 +3333,11 @@ h1, h2, h3, h4, h5 {
 
 .kpi-card.kpi-gold {
     border-color: rgba(201, 162, 39, 0.4);
-    background: linear-gradient(135deg, var(--lacquer-2) 0%, rgba(201, 162, 39, 0.08) 100%);
+    background: linear-gradient(
+        135deg,
+        var(--lacquer-2) 0%,
+        rgba(201, 162, 39, 0.08) 100%
+    );
 }
 
 .kpi-icon.gold {
@@ -2590,7 +3440,7 @@ h1, h2, h3, h4, h5 {
 
 .status-badge.badge-info {
     background: rgba(74, 144, 226, 0.18);
-    color: #85B6FF;
+    color: #85b6ff;
     border: 1px solid rgba(74, 144, 226, 0.35);
 }
 
@@ -2695,9 +3545,9 @@ h1, h2, h3, h4, h5 {
     *,
     *::before,
     *::after {
-        animation-duration: .01ms !important;
+        animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
+        transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
     .btn-primary:hover,
@@ -2708,7 +3558,9 @@ h1, h2, h3, h4, h5 {
     .btn-upload-trigger:hover,
     .btn-add-green:hover,
     .btn-danger-red:hover,
-    .btn-copy-gsheets:hover { transform: none; }
+    .btn-copy-gsheets:hover {
+        transform: none;
+    }
 }
 
 /* KPI Status Select Dynamic Styling */
@@ -2750,6 +3602,24 @@ h1, h2, h3, h4, h5 {
    AUTHENTICATION & ROLE-BASED ACCESS CONTROL (ADMIN / STAFF)
    ========================================================================== */
 
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-sm);
+    background: var(--lacquer-2);
+    color: var(--ink-hi);
+    font-weight: 600;
+    transition: all var(--speed) var(--ease);
+}
+
+.theme-toggle:hover {
+    background: var(--lacquer-3);
+    border-color: var(--goldleaf);
+}
+
 .auth-bar {
     display: flex;
     align-items: center;
@@ -2781,7 +3651,7 @@ h1, h2, h3, h4, h5 {
 .role-badge.admin-role {
     background: rgba(201, 162, 39, 0.2);
     border: 1px solid var(--goldleaf);
-    color: #F8E29E;
+    color: #f8e29e;
     box-shadow: 0 0 10px rgba(201, 162, 39, 0.15);
 }
 
@@ -2806,7 +3676,7 @@ h1, h2, h3, h4, h5 {
 
 .btn-auth-toggle.btn-login:hover {
     background: var(--goldleaf);
-    color: #1A1207;
+    color: #1a1207;
     border-color: var(--goldleaf);
     transform: translateY(-1px);
 }
@@ -2819,7 +3689,7 @@ h1, h2, h3, h4, h5 {
 
 .btn-auth-toggle.btn-logout:hover {
     background: var(--cinnabar);
-    color: #FFF;
+    color: #fff;
     border-color: var(--cinnabar);
     transform: translateY(-1px);
 }
@@ -2884,4 +3754,3 @@ body.staff-mode .nav-item[data-tab="tab-optimizer"]::after {
     color: var(--goldleaf);
     font-size: 16px;
 }
-
