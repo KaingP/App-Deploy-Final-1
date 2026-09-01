@@ -2746,3 +2746,142 @@ h1, h2, h3, h4, h5 {
     color: var(--ink-hi);
 }
 
+/* ==========================================================================
+   AUTHENTICATION & ROLE-BASED ACCESS CONTROL (ADMIN / STAFF)
+   ========================================================================== */
+
+.auth-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--lacquer-2);
+    padding: 4px 6px;
+    border-radius: var(--radius);
+    border: 1px solid var(--rule);
+}
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    transition: all var(--speed) var(--ease);
+    user-select: none;
+}
+
+.role-badge.staff-role {
+    background: rgba(63, 107, 95, 0.18);
+    border: 1px solid var(--patina);
+    color: var(--patina-lt);
+}
+
+.role-badge.admin-role {
+    background: rgba(201, 162, 39, 0.2);
+    border: 1px solid var(--goldleaf);
+    color: #F8E29E;
+    box-shadow: 0 0 10px rgba(201, 162, 39, 0.15);
+}
+
+.btn-auth-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--speed) var(--ease);
+    border: 1px solid transparent;
+}
+
+.btn-auth-toggle.btn-login {
+    background: rgba(201, 162, 39, 0.12);
+    border-color: rgba(201, 162, 39, 0.4);
+    color: var(--goldleaf);
+}
+
+.btn-auth-toggle.btn-login:hover {
+    background: var(--goldleaf);
+    color: #1A1207;
+    border-color: var(--goldleaf);
+    transform: translateY(-1px);
+}
+
+.btn-auth-toggle.btn-logout {
+    background: rgba(183, 51, 42, 0.15);
+    border-color: rgba(232, 112, 95, 0.4);
+    color: var(--cinnabar-lt);
+}
+
+.btn-auth-toggle.btn-logout:hover {
+    background: var(--cinnabar);
+    color: #FFF;
+    border-color: var(--cinnabar);
+    transform: translateY(-1px);
+}
+
+.btn-auth-action {
+    background: var(--lacquer-3);
+    border: 1px solid var(--rule);
+    color: var(--ink-dim);
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all var(--speed) var(--ease);
+}
+
+.btn-auth-action:hover {
+    color: var(--goldleaf);
+    border-color: var(--goldleaf);
+    background: var(--lacquer-4);
+}
+
+/* Visibility Rules based on mode */
+body.staff-mode .admin-only-elem {
+    display: none !important;
+}
+
+body.admin-mode .staff-only-elem {
+    display: none !important;
+}
+
+/* Sidebar navigation in staff mode */
+body.staff-mode .nav-item[data-tab="tab-optimizer"] {
+    opacity: 0.65;
+    position: relative;
+}
+
+body.staff-mode .nav-item[data-tab="tab-optimizer"]::after {
+    content: "\f023";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 11px;
+    color: var(--goldleaf);
+    margin-left: auto;
+    padding-left: 6px;
+}
+
+/* Lock notification alert */
+.role-notice-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    background: rgba(201, 162, 39, 0.08);
+    border: 1px dashed var(--goldleaf);
+    color: var(--ink-hi);
+    font-size: 13px;
+    margin-bottom: 1rem;
+}
+
+.role-notice-banner i {
+    color: var(--goldleaf);
+    font-size: 16px;
+}
+

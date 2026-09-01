@@ -137,13 +137,26 @@
             <header class="topbar">
                 <div class="topbar-left">
                     <h1 id="pageTitle">Lịch Trực Toàn Bộ Các Ngày Trong Tuần</h1>
-                    <p class="subtitle">Dự án Gây Quỹ F&B | THPT Chuyên Hùng Vương</p>
+                    <p class="subtitle">Dự án Gây Quỹ F&amp;B | THPT Chuyên Hùng Vương</p>
                 </div>
                 <div class="topbar-right">
-                    <button class="btn-upload-trigger" id="btnOpenUploadModal">
+                    <!-- Auth Role Badge & Switcher -->
+                    <div class="auth-bar" id="authBar">
+                        <div class="role-badge staff-role" id="roleBadge" title="Trạng thái phân quyền người dùng">
+                            <i class="fa-solid fa-user-check" id="roleIcon"></i> <span id="roleText">Chế độ Nhân Viên</span>
+                        </div>
+                        <button class="btn-auth-toggle btn-login" id="btnAuthToggle" type="button" title="Đăng nhập để chỉnh sửa ca và kho hàng">
+                            <i class="fa-solid fa-lock" id="btnAuthIcon"></i> <span id="btnAuthText">Đăng nhập Admin</span>
+                        </button>
+                        <button class="btn-auth-action admin-only-elem" id="btnOpenChangePwdModal" type="button" title="Đổi mật khẩu Quản trị viên" style="display: none;">
+                            <i class="fa-solid fa-key"></i>
+                        </button>
+                    </div>
+
+                    <button class="btn-upload-trigger admin-only-elem" id="btnOpenUploadModal">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Nạp Dữ Liệu / Google Sheet
                     </button>
-                    <button class="btn-quick-run" id="btnQuickOptimize">
+                    <button class="btn-quick-run admin-only-elem" id="btnQuickOptimize">
                         <i class="fa-solid fa-bolt"></i> Chạy Tối Ưu Hóa (OR-Tools)
                     </button>
                 </div>
@@ -535,14 +548,14 @@
                             <p>Quản lý nguồn hàng, giá bán, tồn kho đầu, số lượng đã bán và tồn kho thực tế</p>
                         </div>
                         <div class="header-actions-group">
-                            <button class="btn-export" id="btnUploadInventoryExcel" type="button" style="background: #2D6A4F; border-color: #2D6A4F; padding: 6px 14px; font-size: 13px;">
+                            <button class="btn-export admin-only-elem" id="btnUploadInventoryExcel" type="button" style="background: #2D6A4F; border-color: #2D6A4F; padding: 6px 14px; font-size: 13px;">
                                 <i class="fa-solid fa-file-excel"></i> Nhập SP Từ Excel
                             </button>
                             <input type="file" id="inputInventoryExcelFile" accept=".xlsx,.xls,.csv" style="display:none;" />
                             <button class="btn-primary" id="btnOpenRecordSaleModal">
                                 <i class="fa-solid fa-cash-register"></i> Ghi Nhận Bán Hàng
                             </button>
-                            <button class="btn-add-green" id="btnOpenAddProductModal">
+                            <button class="btn-add-green admin-only-elem" id="btnOpenAddProductModal">
                                 <i class="fa-solid fa-plus"></i> + Thêm SP
                             </button>
                         </div>
@@ -1488,6 +1501,82 @@
                 <button type="button" class="btn-secondary" id="btnCancelMemberModal">Hủy Bỏ</button>
                 <button type="button" class="btn-primary" id="btnSaveMemberModal"><i class="fa-solid fa-floppy-disk"></i> Lưu Cập Nhật</button>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ĐĂNG NHẬP QUẢN TRỊ VIÊN (ADMIN) -->
+    <div class="modal-backdrop" id="adminLoginModal">
+        <div class="modal-box glass-card" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 style="color: var(--goldleaf); display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-shield-halved"></i> Đăng Nhập Quản Trị Viên
+                </h3>
+                <button class="modal-close" id="btnCloseLoginModal">&times;</button>
+            </div>
+            <form id="adminLoginForm">
+                <div class="modal-body">
+                    <p style="font-size: 13px; color: var(--ink-dim); margin-bottom: 1rem; line-height: 1.5;">
+                        Nhập mật khẩu Quản trị viên (Admin) để mở khóa quyền nạp dữ liệu ca trực, xếp ca tối ưu, sửa ca và quản lý kho hàng.
+                    </p>
+                    <div class="form-group">
+                        <label style="font-weight: 600;">Mật khẩu Quản Trị Viên <span style="color: var(--cinnabar);">*</span>:</label>
+                        <div style="position: relative;">
+                            <input type="password" id="inputAdminPassword" class="custom-input" placeholder="Nhập mật khẩu Admin..." required autocomplete="current-password" style="padding-right: 40px;" />
+                            <button type="button" id="btnToggleShowPassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--ink-dim); cursor: pointer;">
+                                <i class="fa-solid fa-eye" id="iconShowPassword"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; cursor: pointer; color: var(--ink-light);">
+                            <input type="checkbox" id="chkRememberAdmin" checked style="width: auto; margin: 0;" />
+                            <span>Ghi nhớ đăng nhập trên máy/trình duyệt này</span>
+                        </label>
+                    </div>
+                    <div id="adminLoginMsg" class="swap-msg" style="margin-top: 10px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="btnCancelLoginModal">Đóng</button>
+                    <button type="submit" class="btn-primary" id="btnSubmitAdminLogin">
+                        <i class="fa-solid fa-right-to-bracket"></i> Đăng Nhập
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ĐỔI MẬT KHẨU QUẢN TRỊ VIÊN -->
+    <div class="modal-backdrop" id="changePasswordModal">
+        <div class="modal-box glass-card" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 style="color: var(--goldleaf); display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-key"></i> Đổi Mật Khẩu Quản Trị
+                </h3>
+                <button class="modal-close" id="btnCloseChangePwdModal">&times;</button>
+            </div>
+            <form id="changePasswordForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Mật khẩu hiện tại <span style="color: var(--cinnabar);">*</span>:</label>
+                        <input type="password" id="inputOldPassword" class="custom-input" placeholder="Mật khẩu cũ..." required />
+                    </div>
+                    <div class="form-group" style="margin-top: 12px;">
+                        <label>Mật khẩu mới <span style="color: var(--cinnabar);">*</span>:</label>
+                        <input type="password" id="inputNewPassword" class="custom-input" placeholder="Mật khẩu mới (ít nhất 4 ký tự)..." required minlength="4" />
+                    </div>
+                    <div class="form-group" style="margin-top: 12px;">
+                        <label>Xác nhận mật khẩu mới <span style="color: var(--cinnabar);">*</span>:</label>
+                        <input type="password" id="inputConfirmNewPassword" class="custom-input" placeholder="Nhập lại mật khẩu mới..." required minlength="4" />
+                    </div>
+                    <div id="changePwdMsg" class="swap-msg" style="margin-top: 10px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="btnCancelChangePwdModal">Hủy</button>
+                    <button type="submit" class="btn-primary" id="btnSubmitChangePwd">
+                        <i class="fa-solid fa-floppy-disk"></i> Lưu Mật Khẩu Mới
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 

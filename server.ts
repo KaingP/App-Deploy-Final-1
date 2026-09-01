@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
 import * as xlsx from 'xlsx';
+import crypto from 'crypto';
 
 import { 
   loadShiftsMaster, 
@@ -21,7 +22,7 @@ import { exportScheduleToExcel } from './src/exporter';
 import { TASK_2_DETAILS } from './src/risk_and_hr_protocols';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const STATE_FILE = process.env.STATE_FILE || 'state.json';
 const REPORT_PATH = 'reports/Lich_Truc_Toi_Uu_Hung_Vuong_Concert.xlsx';
 
@@ -60,7 +61,10 @@ export interface SaleTransaction {
   refunded?: boolean;
 }
 
-// Global State
+// Global State & Auth
+let ADMIN_PASSWORD: string = process.env.ADMIN_PASSWORD || 'hungvuong2026';
+const ACTIVE_ADMIN_TOKENS: Set<string> = new Set();
+
 let START_DATE: string = '2026-08-24';
 let CURRENT_SHIFTS: Shift[] = [];
 let CURRENT_MEMBERS: Member[] = [];
@@ -115,10 +119,48 @@ let INVENTORY_PRODUCTS: Product[] = [];
 let SALES_LOGS: SaleTransaction[] = [];
 let KPI_ATTENDANCE: any[] = [];
 
+// Auth Helpers & Middleware
+function extractToken(req: express.Request): string | null {
+  const authHeader = req.headers['authorization'] || '';
+  if (typeof authHeader === 'string' && authHeader.startsWith('Bearer ')) {
+    return authHeader.slice(7).trim();
+  }
+  const customHeader = req.headers['x-admin-token'];
+  if (typeof customHeader === 'string') {
+    return customHeader.trim();
+  }
+  return null;
+}
+
+export function isValidAdmin(req: express.Request): boolean {
+  const token = extractToken(req);
+  if (token && ACTIVE_ADMIN_TOKENS.has(token)) {
+    return true;
+  }
+  // Allow direct secret key in header for automation or environment
+  const pwdHeader = req.headers['x-admin-password'];
+  if (typeof pwdHeader === 'string' && pwdHeader === ADMIN_PASSWORD) {
+    return true;
+  }
+  return false;
+}
+
+export function requireAdmin(req: express.Request, res: express.Response, next: express.NextFunction) {
+  if (isValidAdmin(req)) {
+    return next();
+  }
+  return res.status(401).json({
+    success: false,
+    require_admin: true,
+    message: 'Yêu cầu quyền Quản trị viên (Admin) để thực hiện thao tác này! Vui lòng đăng nhập với mật khẩu Admin.'
+  });
+}
+
 // Helpers
 function persist() {
   const payload = {
     version: 2,
+    admin_password: ADMIN_PASSWORD,
     start_date: START_DATE,
     enable_ca_ngoai: ENABLE_CA_NGOAI,
     custom_ca_ngoai: CUSTOM_CA_NGOAI,
@@ -178,6 +220,9 @@ function bootstrapState() {
       const data = fs.readFileSync(STATE_FILE, 'utf-8');
       const saved = JSON.parse(data);
       if (saved) {
+        if (saved.admin_password) {
+          ADMIN_PASSWORD = saved.admin_password;
+        }
         if (saved.start_date) {
           START_DATE = saved.start_date;
         }
@@ -229,6 +274,73 @@ app.get('/healthz', (req, res) => {
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'templates', 'index.html'));
+});
+
+// AUTHENTICATION ROUTES
+app.post('/api/auth/login', (req, res) => {
+  const { password } = req.body || {};
+  if (!password) {
+    return res.status(400).json({ success: false, message: 'Vui lòng nhập mật khẩu Quản trị viên!' });
+  }
+
+  if (password.trim() === ADMIN_PASSWORD.trim()) {
+    const token = crypto.randomBytes(32).toString('hex');
+    ACTIVE_ADMIN_TOKENS.add(token);
+    return res.json({
+      success: true,
+      token: token,
+      role: 'admin',
+      message: 'Đăng nhập Quản trị viên thành công!'
+    });
+  }
+
+  return res.status(401).json({
+    success: false,
+    message: 'Mật khẩu Quản trị viên không chính xác!'
+  });
+});
+
+app.get('/api/auth/status', (req, res) => {
+  const isAdmin = isValidAdmin(req);
+  res.json({
+    success: true,
+    is_admin: isAdmin,
+    role: isAdmin ? 'admin' : 'staff'
+  });
+});
+
+app.post('/api/auth/logout', (req, res) => {
+  const token = extractToken(req);
+  if (token) {
+    ACTIVE_ADMIN_TOKENS.delete(token);
+  }
+  res.json({
+    success: true,
+    message: 'Đã đăng xuất khỏi chế độ Quản trị viên!'
+  });
+});
+
+app.post('/api/auth/change-password', requireAdmin, (req, res) => {
+  const { old_password, new_password } = req.body || {};
+  if (!old_password || !new_password) {
+    return res.status(400).json({ success: false, message: 'Vui lòng nhập mật khẩu cũ và mật khẩu mới!' });
+  }
+
+  if (old_password.trim() !== ADMIN_PASSWORD.trim()) {
+    return res.status(400).json({ success: false, message: 'Mật khẩu cũ không chính xác!' });
+  }
+
+  if (new_password.trim().length < 4) {
+    return res.status(400).json({ success: false, message: 'Mật khẩu mới phải có ít nhất 4 ký tự!' });
+  }
+
+  ADMIN_PASSWORD = new_password.trim();
+  persist();
+
+  res.json({
+    success: true,
+    message: 'Đã đổi mật khẩu Quản trị viên thành công!'
+  });
 });
 
 app.get('/api/shifts', (req, res) => {
@@ -287,7 +399,7 @@ app.get('/api/inventory', (req, res) => {
   });
 });
 
-app.post('/api/inventory/product', (req, res) => {
+app.post('/api/inventory/product', requireAdmin, (req, res) => {
   const data = req.body || {};
   let id = String(data.id || '').trim();
   const name = String(data.name || '').trim();
@@ -354,7 +466,7 @@ app.post('/api/inventory/product', (req, res) => {
   });
 });
 
-app.post('/api/inventory/delete', (req, res) => {
+app.post('/api/inventory/delete', requireAdmin, (req, res) => {
   const { id } = req.body || {};
   if (!id) {
     return res.status(400).json({ success: false, message: 'Thiếu mã sản phẩm' });
@@ -373,6 +485,54 @@ app.post('/api/inventory/delete', (req, res) => {
     message: `Đã xóa sản phẩm ${id} khỏi kho hàng!`,
     ...inv
   });
+});
+
+app.post('/api/inventory/upload-excel', requireAdmin, upload.single('file') as any, async (req: any, res: any) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'Không tìm thấy file tải lên!' });
+    }
+    const filePath = req.file.path;
+    const wb = xlsx.readFile(filePath);
+    const sheetName = wb.SheetNames[0];
+    const sheet = wb.Sheets[sheetName];
+    const rows = xlsx.utils.sheet_to_json<any>(sheet);
+    fs.unlinkSync(filePath);
+
+    let count = 0;
+    for (const row of rows) {
+      const name = String(row['Tên sản phẩm'] || row['Tên SP'] || row['Name'] || row['name'] || '').trim();
+      if (!name) continue;
+      const unit = String(row['Đơn vị tính'] || row['ĐVT'] || row['Unit'] || 'Phần').trim();
+      const price = Math.max(0, parseInt(String(row['Giá bán'] || row['Giá'] || row['Price'] || '0').replace(/[^0-9]/g, ''), 10));
+      const initial_stock = Math.max(0, parseInt(String(row['Tồn kho đầu'] || row['Tồn kho'] || row['Stock'] || '0').replace(/[^0-9]/g, ''), 10));
+      const sold_count = Math.max(0, parseInt(String(row['Đã bán'] || row['Sold'] || '0').replace(/[^0-9]/g, ''), 10));
+      const note = String(row['Ghi chú'] || row['Note'] || '').trim();
+
+      let id = String(row['Mã SP'] || row['Mã sản phẩm'] || row['ID'] || row['id'] || '').trim();
+      if (!id) {
+        id = `SP${String(INVENTORY_PRODUCTS.length + 1).padStart(2, '0')}`;
+      }
+
+      const existingIdx = INVENTORY_PRODUCTS.findIndex(p => p.id === id || p.name.toLowerCase() === name.toLowerCase());
+      if (existingIdx !== -1) {
+        INVENTORY_PRODUCTS[existingIdx] = { id: INVENTORY_PRODUCTS[existingIdx].id, name, unit, price, initial_stock, sold_count, note };
+      } else {
+        INVENTORY_PRODUCTS.push({ id, name, unit, price, initial_stock, sold_count, note });
+      }
+      count++;
+    }
+
+    persist();
+    const inv = getInventoryData();
+    res.json({
+      success: true,
+      message: `Đã nạp thành công ${count} sản phẩm vào kho hàng!`,
+      ...inv
+    });
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: `Lỗi đọc file Excel: ${err.message}` });
+  }
 });
 
 app.post('/api/inventory/sell', (req, res) => {
@@ -470,7 +630,7 @@ app.post('/api/inventory/refund', (req, res) => {
   });
 });
 
-app.post('/api/inventory/reset', (req, res) => {
+app.post('/api/inventory/reset', requireAdmin, (req, res) => {
   INVENTORY_PRODUCTS = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
   SALES_LOGS = JSON.parse(JSON.stringify(DEFAULT_SALES_LOGS));
   persist();
@@ -490,7 +650,7 @@ app.get('/api/members', (req, res) => {
   });
 });
 
-app.post('/api/members/update', (req, res) => {
+app.post('/api/members/update', requireAdmin, (req, res) => {
   const data = req.body || {};
   const member_id = String(data.member_id || '').trim();
 
@@ -639,7 +799,7 @@ app.post('/api/kpi/attendance', (req, res) => {
   res.json({ success: true, message: 'Đã cập nhật trạng thái chuyên cần', log });
 });
 
-app.post('/api/kpi/attendance/reset', (req, res) => {
+app.post('/api/kpi/attendance/reset', requireAdmin, (req, res) => {
   KPI_ATTENDANCE = [];
   const shifts = LATEST_SCHEDULE_RESULT && LATEST_SCHEDULE_RESULT.assigned_shifts ? LATEST_SCHEDULE_RESULT.assigned_shifts : [];
   shifts.forEach((s: any) => {
@@ -678,6 +838,13 @@ app.all('/api/ca-ngoai', (req, res) => {
       list: CUSTOM_CA_NGOAI || []
     });
   } else if (req.method === 'POST') {
+    if (!isValidAdmin(req)) {
+      return res.status(401).json({
+        success: false,
+        require_admin: true,
+        message: 'Yêu cầu quyền Quản trị viên (Admin) để chỉnh sửa ca ngoài!'
+      });
+    }
     const data = req.body || {};
     if (data.enabled !== undefined) {
       ENABLE_CA_NGOAI = Boolean(data.enabled);
@@ -728,7 +895,7 @@ app.all('/api/ca-ngoai', (req, res) => {
   }
 });
 
-app.post('/api/upload-data', upload.single('file') as any, async (req: any, res: any) => {
+app.post('/api/upload-data', requireAdmin, upload.single('file') as any, async (req: any, res: any) => {
   try {
     let msg = '';
     if (req.file) {
@@ -790,7 +957,7 @@ app.post('/api/upload-data', upload.single('file') as any, async (req: any, res:
   }
 });
 
-app.post('/api/shift/update', async (req, res) => {
+app.post('/api/shift/update', requireAdmin, async (req, res) => {
   if (!LATEST_SCHEDULE_RESULT) {
     return res.status(400).json({ success: false, message: 'Chưa có lịch trực' });
   }
@@ -1035,7 +1202,7 @@ app.get('/api/contingency/incidents', (req, res) => {
   });
 });
 
-app.post('/api/contingency/reset', (req, res) => {
+app.post('/api/contingency/reset', requireAdmin, (req, res) => {
   INCIDENT_LOGS = [];
   persist();
   res.json({
@@ -1051,7 +1218,7 @@ app.post('/api/contingency/reset', (req, res) => {
   });
 });
 
-app.post('/api/schedule/run', async (req, res) => {
+app.post('/api/schedule/run', requireAdmin, async (req, res) => {
   const data = req.body || {};
 
   if (data.start_date) {

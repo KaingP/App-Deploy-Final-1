@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: hungvuong-concert-scheduler
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: PORT
+        value: 3000

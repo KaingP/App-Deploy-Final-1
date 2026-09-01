@@ -1,10 +1,14 @@
 // Client-side Application Controller for Hùng Vương Concert Scheduler
 
-document.addEventListener('DOMContentLoaded', () => {
+let currentAdminToken = localStorage.getItem('hv_admin_token') || null;
+let currentUserRole = 'staff';
+
+document.addEventListener('DOMContentLoaded', async () => {
     initTabs();
     initMoreMenu();
     initModals();
     initEventListeners();
+    await checkAuthStatus();
     loadCurrentSchedule();
     loadCaNgoaiList();
     loadHeatmapData();
@@ -25,6 +29,138 @@ let currentEditingShift = null;
 // Ba tab này không nằm ở thanh đáy trên điện thoại; chúng ở trong bảng "Thêm".
 const MORE_TABS = ['tab-inventory', 'tab-audit', 'tab-protocols', 'tab-kpi'];
 
+// AUTHENTICATION & RBAC HELPERS
+async function authFetch(url, options = {}) {
+    options.headers = options.headers || {};
+    if (currentAdminToken) {
+        if (options.headers instanceof Headers) {
+            options.headers.set('Authorization', `Bearer ${currentAdminToken}`);
+        } else {
+            options.headers['Authorization'] = `Bearer ${currentAdminToken}`;
+        }
+    }
+    const response = await fetch(url, options);
+    if (response.status === 401) {
+        const cloned = response.clone();
+        try {
+            const data = await cloned.json();
+            if (data.require_admin) {
+                openAdminLoginModal(data.message || 'Thao tác này yêu cầu quyền Quản trị viên. Vui lòng đăng nhập để tiếp tục.');
+            }
+        } catch (e) {}
+    }
+    return response;
+}
+
+async function checkAuthStatus() {
+    try {
+        const res = await authFetch('/api/auth/status');
+        const data = await res.json();
+        currentUserRole = data.role || (data.is_admin ? 'admin' : 'staff');
+        updateAuthUI(data.is_admin === true);
+    } catch (e) {
+        currentUserRole = 'staff';
+        updateAuthUI(false);
+    }
+}
+
+function updateAuthUI(isAdmin) {
+    document.body.classList.toggle('admin-mode', isAdmin);
+    document.body.classList.toggle('staff-mode', !isAdmin);
+
+    const roleBadge = document.getElementById('roleBadge');
+    const roleIcon = document.getElementById('roleIcon');
+    const roleText = document.getElementById('roleText');
+    const btnToggle = document.getElementById('btnAuthToggle');
+    const btnIcon = document.getElementById('btnAuthIcon');
+    const btnText = document.getElementById('btnAuthText');
+    const btnChangePwd = document.getElementById('btnOpenChangePwdModal');
+
+    if (isAdmin) {
+        if (roleBadge) {
+            roleBadge.className = 'role-badge admin-role';
+            if (roleIcon) roleIcon.className = 'fa-solid fa-shield-halved';
+            if (roleText) roleText.textContent = 'Quản Trị Viên';
+        }
+        if (btnToggle) {
+            btnToggle.className = 'btn-auth-toggle btn-logout';
+            if (btnIcon) btnIcon.className = 'fa-solid fa-right-from-bracket';
+            if (btnText) btnText.textContent = 'Đăng xuất Admin';
+            btnToggle.title = 'Thoát khỏi chế độ Quản trị viên';
+        }
+        if (btnChangePwd) btnChangePwd.style.display = 'inline-flex';
+    } else {
+        if (roleBadge) {
+            roleBadge.className = 'role-badge staff-role';
+            if (roleIcon) roleIcon.className = 'fa-solid fa-user-check';
+            if (roleText) roleText.textContent = 'Chế độ Nhân Viên';
+        }
+        if (btnToggle) {
+            btnToggle.className = 'btn-auth-toggle btn-login';
+            if (btnIcon) btnIcon.className = 'fa-solid fa-lock';
+            if (btnText) btnText.textContent = 'Đăng nhập Admin';
+            btnToggle.title = 'Đăng nhập để chỉnh sửa ca và kho hàng';
+        }
+        if (btnChangePwd) btnChangePwd.style.display = 'none';
+    }
+
+    // Re-render components with role considerations
+    if (globalScheduleData) {
+        renderDutyBoard();
+        renderMemberTable();
+    }
+    if (globalInventoryData && globalInventoryData.products) {
+        renderInventoryTable(globalInventoryData.products);
+    }
+}
+
+function openAdminLoginModal(notice) {
+    const modal = document.getElementById('adminLoginModal');
+    const msg = document.getElementById('adminLoginMsg');
+    const input = document.getElementById('inputAdminPassword');
+    if (!modal) return;
+
+    if (msg) {
+        if (notice) {
+            msg.className = 'swap-msg info';
+            msg.textContent = notice;
+            msg.style.display = 'block';
+        } else {
+            msg.style.display = 'none';
+            msg.textContent = '';
+        }
+    }
+    if (input) {
+        input.value = '';
+        setTimeout(() => input.focus(), 150);
+    }
+    modal.classList.add('active');
+}
+
+function closeAdminLoginModal() {
+    const modal = document.getElementById('adminLoginModal');
+    if (modal) modal.classList.remove('active');
+}
+
+function openChangePasswordModal() {
+    const modal = document.getElementById('changePasswordModal');
+    const msg = document.getElementById('changePwdMsg');
+    if (!modal) return;
+    if (msg) {
+        msg.style.display = 'none';
+        msg.textContent = '';
+    }
+    document.getElementById('inputOldPassword').value = '';
+    document.getElementById('inputNewPassword').value = '';
+    document.getElementById('inputConfirmNewPassword').value = '';
+    modal.classList.add('active');
+}
+
+function closeChangePasswordModal() {
+    const modal = document.getElementById('changePasswordModal');
+    if (modal) modal.classList.remove('active');
+}
+
 // Tab Switching
 function initTabs() {
     const navItems = document.querySelectorAll('.nav-item');
@@ -41,20 +177,24 @@ function initTabs() {
         'tab-kpi': 'Theo Dõi & Điểm Danh KPI Chuyên Cần Nhân Sự',
         'tab-audit': 'Kiểm Tra Tính Hợp Lệ & Thẩm Định Quy Chuẩn',
         'tab-contingency': 'Quản Lý Ca Vắng, Đi Trễ & Nhân Sự Dự Phòng',
-        'tab-protocols': 'Quy Trình Quản Trị Nhân Sự & Dự Trù Rủi Ro (Nhiệm Vụ 2)'
+        'tab-protocols': 'Quy Trình Quản Trị Nhân Sự & Dự Trù Rủi Ro (Nhiệm Vụ 2)',
+        'tab-live-shift': 'Ca-Live & POS Bán Hàng Realtime'
     };
 
     navItems.forEach(item => {
-        // Ở khổ tablet rail chỉ còn icon, không còn nhãn → cần tooltip
         const label = item.querySelector('.nav-full')?.textContent.trim();
         if (label && !item.title) item.title = label;
 
         item.addEventListener('click', () => {
             let targetTab = item.getAttribute('data-tab');
-            // Nút "Thêm" cũng mang class .nav-item để dùng chung style, nhưng
-            // không trỏ tới tab nào — bỏ qua, initMoreMenu() lo phần của nó.
             if (!targetTab) return;
             if (targetTab === 'tab-ca-ngoai') targetTab = 'tab-optimizer';
+
+            // Protect optimizer tab for Admin only
+            if (targetTab === 'tab-optimizer' && currentUserRole !== 'admin') {
+                openAdminLoginModal('Mục Tinh Chỉnh & Tối Ưu Lịch Trực yêu cầu quyền Quản trị viên (Admin). Vui lòng đăng nhập Admin để truy cập.');
+                return;
+            }
 
             navItems.forEach(n => n.classList.remove('active'));
             tabContents.forEach(t => t.classList.remove('active'));
@@ -63,8 +203,6 @@ function initTabs() {
             const targetEl = document.getElementById(targetTab);
             if (targetEl) targetEl.classList.add('active');
 
-            // Tab mở từ bảng "Thêm" không có ô nào ở thanh đáy, nên đánh dấu
-            // chính nút "Thêm" để thanh đáy không trống trơn.
             if (moreBtn) moreBtn.classList.toggle('active', MORE_TABS.includes(targetTab));
 
             if (targetTab === 'tab-inventory') {
@@ -91,7 +229,6 @@ function initMoreMenu() {
     };
 
     trigger.addEventListener('click', () => setOpen(!sheet.classList.contains('active')));
-    // Bấm ra ngoài panel thì đóng
     sheet.addEventListener('click', e => { if (e.target === sheet) setOpen(false); });
     sheet.querySelectorAll('.nav-item').forEach(b => b.addEventListener('click', () => setOpen(false)));
     document.getElementById('btnMorePreview')?.addEventListener('click', () => {
@@ -140,7 +277,13 @@ function initModals() {
 
     // Upload Data Modal
     const uploadModal = document.getElementById('uploadDataModal');
-    document.getElementById('btnOpenUploadModal')?.addEventListener('click', () => uploadModal.classList.add('active'));
+    document.getElementById('btnOpenUploadModal')?.addEventListener('click', () => {
+        if (currentUserRole !== 'admin') {
+            openAdminLoginModal('Bạn cần đăng nhập quyền Quản trị viên để nạp dữ liệu lịch trực!');
+            return;
+        }
+        uploadModal.classList.add('active');
+    });
     document.getElementById('btnCloseUploadModal')?.addEventListener('click', () => uploadModal.classList.remove('active'));
 
     // Preview Modal
@@ -157,6 +300,15 @@ function initModals() {
     const saleModal = document.getElementById('recordSaleModal');
     document.getElementById('btnCloseSaleModal')?.addEventListener('click', () => saleModal?.classList.remove('active'));
     document.getElementById('btnCancelSaleModal')?.addEventListener('click', () => saleModal?.classList.remove('active'));
+
+    // Admin Login Modal
+    document.getElementById('btnCloseLoginModal')?.addEventListener('click', closeAdminLoginModal);
+    document.getElementById('btnCancelLoginModal')?.addEventListener('click', closeAdminLoginModal);
+
+    // Change Password Modal
+    document.getElementById('btnCloseChangePwdModal')?.addEventListener('click', closeChangePasswordModal);
+    document.getElementById('btnCancelChangePwdModal')?.addEventListener('click', closeChangePasswordModal);
+    document.getElementById('btnOpenChangePwdModal')?.addEventListener('click', openChangePasswordModal);
 
     // Confirmation Modal (2-step)
     document.getElementById('btnCloseConfirmModal')?.addEventListener('click', closeConfirmModal);
@@ -183,8 +335,146 @@ function initModals() {
 }
 
 function initEventListeners() {
+    // Auth Toggle Button (Login / Logout)
+    document.getElementById('btnAuthToggle')?.addEventListener('click', async () => {
+        if (currentUserRole === 'admin') {
+            // Logout
+            try {
+                await authFetch('/api/auth/logout', { method: 'POST' });
+            } catch (e) {}
+            currentAdminToken = null;
+            currentUserRole = 'staff';
+            localStorage.removeItem('hv_admin_token');
+            updateAuthUI(false);
+        } else {
+            // Open Login
+            openAdminLoginModal();
+        }
+    });
+
+    // Toggle show/hide password
+    document.getElementById('btnToggleShowPassword')?.addEventListener('click', () => {
+        const inp = document.getElementById('inputAdminPassword');
+        const icon = document.getElementById('iconShowPassword');
+        if (!inp) return;
+        if (inp.type === 'password') {
+            inp.type = 'text';
+            if (icon) icon.className = 'fa-solid fa-eye-slash';
+        } else {
+            inp.type = 'password';
+            if (icon) icon.className = 'fa-solid fa-eye';
+        }
+    });
+
+    // Admin Login Form Submit
+    document.getElementById('adminLoginForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const pwd = document.getElementById('inputAdminPassword')?.value || '';
+        const remember = document.getElementById('chkRememberAdmin')?.checked;
+        const msg = document.getElementById('adminLoginMsg');
+
+        if (!pwd) return;
+        if (msg) {
+            msg.className = 'swap-msg info';
+            msg.textContent = 'Đang xác thực mật khẩu...';
+            msg.style.display = 'block';
+        }
+
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: pwd })
+            });
+            const data = await res.json();
+            if (data.success && data.token) {
+                currentAdminToken = data.token;
+                currentUserRole = 'admin';
+                if (remember) {
+                    localStorage.setItem('hv_admin_token', data.token);
+                } else {
+                    sessionStorage.setItem('hv_admin_token', data.token);
+                }
+                if (msg) {
+                    msg.className = 'swap-msg success';
+                    msg.textContent = 'Đăng nhập thành công! Đang kích hoạt quyền Quản trị viên...';
+                }
+                updateAuthUI(true);
+                setTimeout(() => {
+                    closeAdminLoginModal();
+                }, 700);
+            } else {
+                if (msg) {
+                    msg.className = 'swap-msg error';
+                    msg.textContent = data.message || 'Mật khẩu Quản trị viên không đúng!';
+                }
+            }
+        } catch (err) {
+            if (msg) {
+                msg.className = 'swap-msg error';
+                msg.textContent = 'Lỗi kết nối máy chủ: ' + err.message;
+            }
+        }
+    });
+
+    // Change Password Form Submit
+    document.getElementById('changePasswordForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const oldPwd = document.getElementById('inputOldPassword')?.value || '';
+        const newPwd = document.getElementById('inputNewPassword')?.value || '';
+        const confirmPwd = document.getElementById('inputConfirmNewPassword')?.value || '';
+        const msg = document.getElementById('changePwdMsg');
+
+        if (newPwd !== confirmPwd) {
+            if (msg) {
+                msg.className = 'swap-msg error';
+                msg.textContent = 'Mật khẩu mới và xác nhận mật khẩu không khớp nhau!';
+                msg.style.display = 'block';
+            }
+            return;
+        }
+
+        if (msg) {
+            msg.className = 'swap-msg info';
+            msg.textContent = 'Đang đổi mật khẩu...';
+            msg.style.display = 'block';
+        }
+
+        try {
+            const res = await authFetch('/api/auth/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ old_password: oldPwd, new_password: newPwd })
+            });
+            const data = await res.json();
+            if (data.success) {
+                if (msg) {
+                    msg.className = 'swap-msg success';
+                    msg.textContent = data.message || 'Đổi mật khẩu thành công!';
+                }
+                setTimeout(() => {
+                    closeChangePasswordModal();
+                }, 1200);
+            } else {
+                if (msg) {
+                    msg.className = 'swap-msg error';
+                    msg.textContent = data.message || 'Đổi mật khẩu thất bại!';
+                }
+            }
+        } catch (err) {
+            if (msg) {
+                msg.className = 'swap-msg error';
+                msg.textContent = 'Lỗi máy chủ: ' + err.message;
+            }
+        }
+    });
+
     // Quick optimize button
     document.getElementById('btnQuickOptimize')?.addEventListener('click', () => {
+        if (currentUserRole !== 'admin') {
+            openAdminLoginModal('Bạn cần đăng nhập quyền Quản trị viên để chạy thuật toán tối ưu xếp ca!');
+            return;
+        }
         runOptimizerWithParams({});
     });
 
@@ -196,6 +486,10 @@ function initEventListeners() {
     // Optimizer Form
     document.getElementById('optimizerForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
+        if (currentUserRole !== 'admin') {
+            openAdminLoginModal('Bạn cần đăng nhập quyền Quản trị viên để chạy thuật toán tối ưu xếp ca!');
+            return;
+        }
         const startDate = document.getElementById('cfgStartDate')?.value || '2026-08-24';
         const phongChinh = document.getElementById('cfgPhongChinh').value;
         const phongDP = document.getElementById('cfgPhongDP').value;
@@ -217,7 +511,13 @@ function initEventListeners() {
     });
 
     // Inventory Event Listeners
-    document.getElementById('btnOpenAddProductModal')?.addEventListener('click', openProductModalForAdd);
+    document.getElementById('btnOpenAddProductModal')?.addEventListener('click', () => {
+        if (currentUserRole !== 'admin') {
+            openAdminLoginModal('Bạn cần đăng nhập quyền Quản trị viên để thêm sản phẩm mới vào kho hàng!');
+            return;
+        }
+        openProductModalForAdd();
+    });
     document.getElementById('btnOpenRecordSaleModal')?.addEventListener('click', () => openQuickSaleModal());
     document.getElementById('productForm')?.addEventListener('submit', handleSaveProduct);
     document.getElementById('recordSaleForm')?.addEventListener('submit', handleSaveSale);
@@ -227,9 +527,15 @@ function initEventListeners() {
     // Master Toggle Ca Ngoài (Enable/Disable below section)
     const masterNgoaiCheckbox = document.getElementById('chkMasterNgoai');
     masterNgoaiCheckbox?.addEventListener('change', async (e) => {
+        if (currentUserRole !== 'admin') {
+            e.preventDefault();
+            e.target.checked = !e.target.checked;
+            openAdminLoginModal('Bạn cần đăng nhập quyền Quản trị viên để thay đổi cài đặt ca bán ngoài!');
+            return;
+        }
         const enabled = e.target.checked;
         updateCaNgoaiPanelState(enabled);
-        await fetch('/api/ca-ngoai', {
+        await authFetch('/api/ca-ngoai', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ enabled: enabled })
@@ -239,6 +545,10 @@ function initEventListeners() {
     // Add Ca Ngoài Form
     document.getElementById('formAddCaNgoai')?.addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (currentUserRole !== 'admin') {
+            openAdminLoginModal('Bạn cần đăng nhập quyền Quản trị viên để thêm ca bán ngoài!');
+            return;
+        }
         const name = document.getElementById('inputNgoaiName').value.trim();
         const day = document.getElementById('selectNgoaiDay').value;
         const startT = document.getElementById('inputNgoaiStart').value.trim();
@@ -257,7 +567,7 @@ function initEventListeners() {
             dp: dp
         };
 
-        const res = await fetch('/api/ca-ngoai', {
+        const res = await authFetch('/api/ca-ngoai', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'add', item: newItem })
@@ -272,13 +582,17 @@ function initEventListeners() {
 
     // Clear all Ca Ngoài with 2-step confirmation modal
     document.getElementById('btnClearAllCaNgoai')?.addEventListener('click', () => {
+        if (currentUserRole !== 'admin') {
+            openAdminLoginModal('Bạn cần đăng nhập quyền Quản trị viên để xóa ca bán ngoài!');
+            return;
+        }
         openConfirmModal({
             title: 'Xác Nhận Xóa Tất Cả Ca Bán Ngoài',
             message: 'Bạn có chắc chắn muốn xóa tất cả các ca bán ngoài? Toàn bộ danh sách điểm ca ngoài đã cấu hình sẽ bị xóa.',
             confirmBtnText: 'Xác Nhận Xóa Hết',
             onConfirm: async () => {
                 try {
-                    const res = await fetch('/api/ca-ngoai', {
+                    const res = await authFetch('/api/ca-ngoai', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ action: 'clear' })
@@ -298,13 +612,17 @@ function initEventListeners() {
 
     // Reset Incidents / Late Attendance History with 2-step confirmation modal
     document.getElementById('btnResetIncidents')?.addEventListener('click', () => {
+        if (currentUserRole !== 'admin') {
+            openAdminLoginModal('Bạn cần đăng nhập quyền Quản trị viên để xóa lịch sử điểm danh!');
+            return;
+        }
         openConfirmModal({
             title: 'Xác Nhận Xóa Lịch Sử Điểm Danh & Sự Cố',
             message: 'Bạn có chắc chắn muốn xóa toàn bộ lịch sử điểm danh, báo cáo đi trễ, vắng mặt và nhân sự thay thế? Dữ liệu này sẽ được đặt lại về 0.',
             confirmBtnText: 'Xóa Lịch Sử',
             onConfirm: async () => {
                 try {
-                    const res = await fetch('/api/contingency/reset', { method: 'POST' });
+                    const res = await authFetch('/api/contingency/reset', { method: 'POST' });
                     const data = await res.json();
                     if (data.success) {
                         loadIncidentLogs();
@@ -315,8 +633,6 @@ function initEventListeners() {
                 }
             }
         });
-    });
-
     // Filter Listeners
     document.querySelectorAll('#channelFilter .filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -434,13 +750,17 @@ function initEventListeners() {
     document.getElementById('kpiShiftSearchInput')?.addEventListener('input', renderKpiAttendance);
     document.getElementById('kpiMemberSearchInput')?.addEventListener('input', renderKpiLeaderboard);
     document.getElementById('btnResetKpiAttendance')?.addEventListener('click', async () => {
+        if (currentUserRole !== 'admin') {
+            openAdminLoginModal('Bạn cần đăng nhập quyền Quản trị viên để đặt lại trạng thái điểm danh!');
+            return;
+        }
         openConfirmModal({
             title: 'Xác Nhận Đặt Lại Điểm Danh',
             message: 'Bạn có chắc chắn muốn đặt lại trạng thái điểm danh của tất cả thành viên về mặc định (Đúng giờ)?',
             confirmBtnText: 'Đặt Lại Toàn Bộ',
             onConfirm: async () => {
                 try {
-                    const res = await fetch('/api/kpi/attendance/reset', { method: 'POST' }).then(r => r.json());
+                    const res = await authFetch('/api/kpi/attendance/reset', { method: 'POST' }).then(r => r.json());
                     if (res.success) {
                         globalKpiAttendance = res.attendance || [];
                         renderKpiAll();
@@ -627,7 +947,7 @@ async function runOptimizerWithParams(params) {
             enable_ca_ngoai: isNgoaiEnabled,
             custom_ca_ngoai: globalCaNgoai
         };
-        const req = fetch('/api/schedule/run', {
+        const req = authFetch('/api/schedule/run', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -1106,7 +1426,7 @@ async function handleSaveShiftEdit() {
     });
 
     try {
-        const res = await fetch('/api/shift/update', {
+        const res = await authFetch('/api/shift/update', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1243,9 +1563,13 @@ function renderMemberTable() {
                 <td class="mk-num">${m.ngoai_shifts}</td>
                 <td><span class="mk-lead">${m.committed_matched}</span></td>
                 <td class="cell-center">
-                    <button type="button" class="btn-action-sm" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); padding: 3px 8px; font-size: 11px;" onclick="openEditMemberModal('${m.member_id}')" title="Sửa lịch rảnh / thông tin">
-                        <i class="fa-solid fa-user-gear"></i> Chỉnh sửa
-                    </button>
+                    ${currentUserRole === 'admin' ? `
+                        <button type="button" class="btn-action-sm" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); padding: 3px 8px; font-size: 11px;" onclick="openEditMemberModal('${m.member_id}')" title="Sửa lịch rảnh / thông tin">
+                            <i class="fa-solid fa-user-gear"></i> Chỉnh sửa
+                        </button>
+                    ` : `
+                        <span style="color: var(--ink-dim); font-size: 11px;">Chỉ xem</span>
+                    `}
                 </td>
             </tr>
         `;
@@ -1514,7 +1838,7 @@ async function handleSyncGoogleSheet() {
     }
 
     try {
-        const res = await fetch('/api/upload-data', {
+        const res = await authFetch('/api/upload-data', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ google_sheet_url: url })
@@ -1564,7 +1888,7 @@ async function handleUploadFile() {
     }
 
     try {
-        const res = await fetch('/api/upload-data', {
+        const res = await authFetch('/api/upload-data', {
             method: 'POST',
             body: formData
         });
@@ -1847,12 +2171,14 @@ function renderInventoryTable(products) {
                         <button type="button" class="btn-action-sm btn-action-sell" onclick="openQuickSaleModal('${esc(p.id)}')" title="Bán nhanh">
                             <i class="fa-solid fa-cart-plus"></i> Bán
                         </button>
-                        <button type="button" class="btn-action-sm btn-action-edit" onclick="openEditProductModal('${esc(p.id)}')" title="Sửa">
-                            <i class="fa-solid fa-pen"></i> Sửa
-                        </button>
-                        <button type="button" class="btn-action-sm btn-action-delete" onclick="deleteProductItem('${esc(p.id)}')" title="Xóa">
-                            <i class="fa-solid fa-trash-can"></i> Xóa
-                        </button>
+                        ${currentUserRole === 'admin' ? `
+                            <button type="button" class="btn-action-sm btn-action-edit" onclick="openEditProductModal('${esc(p.id)}')" title="Sửa">
+                                <i class="fa-solid fa-pen"></i> Sửa
+                            </button>
+                            <button type="button" class="btn-action-sm btn-action-delete" onclick="deleteProductItem('${esc(p.id)}')" title="Xóa">
+                                <i class="fa-solid fa-trash-can"></i> Xóa
+                            </button>
+                        ` : ''}
                     </div>
                 </td>
             </tr>
@@ -1980,7 +2306,7 @@ async function handleSaveProduct(e) {
     }
 
     try {
-        const res = await fetch('/api/inventory/product', {
+        const res = await authFetch('/api/inventory/product', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -2018,7 +2344,7 @@ window.deleteProductItem = function(productId) {
         confirmBtnText: 'Xóa Sản Phẩm',
         onConfirm: async () => {
             try {
-                const res = await fetch('/api/inventory/delete', {
+                const res = await authFetch('/api/inventory/delete', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: productId })
@@ -2769,7 +3095,7 @@ async function handleUploadInventoryExcel(e) {
     formData.append('file', file);
 
     try {
-        const res = await fetch('/api/inventory/upload', {
+        const res = await authFetch('/api/inventory/upload-excel', {
             method: 'POST',
             body: formData
         });
@@ -2814,6 +3140,10 @@ async function refundTransaction(txId) {
 
 // Edit member modal logic
 function openEditMemberModal(memberId) {
+    if (currentUserRole !== 'admin') {
+        openAdminLoginModal('Bạn cần đăng nhập quyền Quản trị viên để chỉnh sửa thông tin hoặc lịch rảnh thành viên!');
+        return;
+    }
     const member = globalMembers.find(m => m.member_id === memberId);
     if (!member) {
         alert('Không tìm thấy thông tin thành viên ' + memberId);
@@ -2936,7 +3266,7 @@ async function saveMemberData() {
     btnSave.disabled = true;
 
     try {
-        const res = await fetch('/api/members/update', {
+        const res = await authFetch('/api/members/update', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
