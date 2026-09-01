@@ -2403,16 +2403,7 @@ function renderLiveShiftDetails(shiftId) {
             `;
         });
 
-        // Nice Confirm Button beneath
-        let confirmBtnHtml = `
-            <div style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">
-                <button type="button" class="btn-primary" id="btnConfirmLiveAttendance" onclick="submitLiveAttendanceBatch()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: #10B981; border-color: #059669; font-weight: 700; height: 42px;">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Lưu Điểm Danh &amp; Gọi Backup
-                </button>
-            </div>
-        `;
-
-        memberListEl.innerHTML = (memHtml ? memHtml + confirmBtnHtml : '<div class="table-empty">Không có nhân sự trong ca này.</div>');
+        memberListEl.innerHTML = memHtml || '<div class="table-empty">Không có nhân sự trong ca này.</div>';
     }
 
     const sellerSel = document.getElementById('livePOSSelectSeller');
