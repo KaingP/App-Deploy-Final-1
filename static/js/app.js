@@ -633,6 +633,8 @@ function initEventListeners() {
                 }
             }
         });
+    });
+
     // Filter Listeners
     document.querySelectorAll('#channelFilter .filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
