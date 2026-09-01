@@ -26,12 +26,23 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const STATE_FILE = process.env.STATE_FILE || 'state.json';
 const REPORT_PATH = 'reports/Lich_Truc_Toi_Uu_Hung_Vuong_Concert.xlsx';
 
+function resolveAppRoot(): string {
+  for (const candidate of [__dirname, path.join(__dirname, '..')]) {
+    if (fs.existsSync(path.join(candidate, 'templates', 'index.html'))) {
+      return candidate;
+    }
+  }
+  return __dirname;
+}
+
+const APP_ROOT = resolveAppRoot();
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 
 // Serve static assets
-app.use('/static', express.static(path.join(__dirname, 'static')));
+app.use('/static', express.static(path.join(APP_ROOT, 'static')));
 
 // Upload configuration
 const upload = multer({ dest: 'uploads/' });
@@ -273,7 +284,7 @@ app.get('/healthz', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'templates', 'index.html'));
+  res.sendFile(path.join(APP_ROOT, 'templates', 'index.html'));
 });
 
 // AUTHENTICATION ROUTES
